@@ -1,0 +1,8 @@
+name: BedwarsItem
+version: '${version}'
+main: cn.linmoyu.bedwarsitem.BedwarsItem
+author: LinMoyu
+
+depend:
+  - BedwarsRel
+  - BedwarsScoreBoardAddon
