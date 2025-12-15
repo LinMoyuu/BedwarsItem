@@ -11,8 +11,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class ZombieSpawnerTask extends BukkitRunnable {
 
-    public static String meta = "BwZombie";
-
     // 期望僵尸数量
     private static final int DESIRED_ZOMBIE_COUNT = 2;
     // 半径检测范围
@@ -21,6 +19,7 @@ public class ZombieSpawnerTask extends BukkitRunnable {
     private static final int TASK_DURATION_SECONDS = 180;
     // 任务执行间隔 (秒)
     private static final int TASK_INTERVAL_SECONDS = 30; // 30秒是瞎给的 没有测过具体数值
+    public static String meta = "BwZombie";
     private final Location spawnerLocation;
     // 已执行秒数
     private int elapsedSeconds = 0;
@@ -68,7 +67,6 @@ public class ZombieSpawnerTask extends BukkitRunnable {
         zombie.setRemoveWhenFarAway(false);
         zombie.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), true));
     }
-
 
 
 //    private void removeRemainingZombies() {

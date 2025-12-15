@@ -1,7 +1,7 @@
 package cn.linmoyu.bedwarsitem.monsters;
 
 import cn.linmoyu.bedwarsitem.BedwarsItem;
-import cn.linmoyu.bedwarsitem.utils.MonsterSpawnUtils;
+import cn.linmoyu.bedwarsitem.utils.MonsterUtils;
 import cn.linmoyu.bedwarsitem.utils.NoAIUtils;
 import cn.linmoyu.bedwarsitem.utils.TakeItemUtil;
 import io.github.bedwarsrel.BedwarsRel;
@@ -53,7 +53,7 @@ public class SkeletonSpawner implements Listener {
         }
 
         TakeItemUtil.TakeItem(player, handItem);
-        spawnSkeleton(MonsterSpawnUtils.getSpawnLocation(event.getClickedBlock().getLocation(), event.getBlockFace()), thrower);
+        spawnSkeleton(MonsterUtils.getSpawnLocation(event.getClickedBlock().getLocation(), event.getBlockFace()), thrower);
     }
 
     private void spawnSkeleton(Location location, Player thrower) {
@@ -62,7 +62,7 @@ public class SkeletonSpawner implements Listener {
         skeleton.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), thrower.getName()));
 
         // 设置自定义属性
-        skeleton.setCustomName("§a§l[" + thrower.getDisplayName() + "§a§l] §b的宠物");
+        skeleton.setCustomName("§a§l[" + thrower.getDisplayName() + "§a§l] §b§l的宠物");
         skeleton.setRemoveWhenFarAway(false);
 
         // 在10秒后没跟过来自动传送
@@ -91,7 +91,7 @@ public class SkeletonSpawner implements Listener {
                     return;
                 }
 
-                Player target = MonsterSpawnUtils.findNearestEnemy(skeleton, thrower);
+                Player target = MonsterUtils.findNearestEnemy(skeleton, thrower);
                 // 设置蠹虫目标
                 if (target == null) {
                     NoAIUtils.setAI(skeleton, false);

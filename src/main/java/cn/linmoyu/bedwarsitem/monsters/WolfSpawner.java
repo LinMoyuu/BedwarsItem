@@ -1,7 +1,7 @@
 package cn.linmoyu.bedwarsitem.monsters;
 
 import cn.linmoyu.bedwarsitem.BedwarsItem;
-import cn.linmoyu.bedwarsitem.utils.MonsterSpawnUtils;
+import cn.linmoyu.bedwarsitem.utils.MonsterUtils;
 import cn.linmoyu.bedwarsitem.utils.NoAIUtils;
 import cn.linmoyu.bedwarsitem.utils.TakeItemUtil;
 import io.github.bedwarsrel.BedwarsRel;
@@ -51,7 +51,7 @@ public class WolfSpawner implements Listener {
         }
 
         TakeItemUtil.TakeItem(player, handItem);
-        spawnWolf(MonsterSpawnUtils.getSpawnLocation(event.getClickedBlock().getLocation(), event.getBlockFace()), thrower);
+        spawnWolf(MonsterUtils.getSpawnLocation(event.getClickedBlock().getLocation(), event.getBlockFace()), thrower);
     }
 
     private void spawnWolf(Location location, Player thrower) {
@@ -59,7 +59,7 @@ public class WolfSpawner implements Listener {
         wolf.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), thrower.getName()));
 
         // 设置自定义属性
-        wolf.setCustomName("§a§l[" + thrower.getDisplayName() + "§a§l] §b的宠物");
+        wolf.setCustomName("§a§l[" + thrower.getDisplayName() + "§a§l] §b§l的宠物");
         wolf.setRemoveWhenFarAway(false);
 
         new BukkitRunnable() {
@@ -85,7 +85,7 @@ public class WolfSpawner implements Listener {
                     return;
                 }
 
-                Player target = MonsterSpawnUtils.findNearestEnemy(wolf, thrower);
+                Player target = MonsterUtils.findNearestEnemy(wolf, thrower);
                 // 设置目标
                 if (target == null) {
                     NoAIUtils.setAI(wolf, false);

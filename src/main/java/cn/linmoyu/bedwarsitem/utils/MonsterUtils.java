@@ -1,15 +1,23 @@
 package cn.linmoyu.bedwarsitem.utils;
 
+import cn.linmoyu.bedwarsitem.monsters.SilverFishSpawner;
+import cn.linmoyu.bedwarsitem.monsters.SkeletonSpawner;
+import cn.linmoyu.bedwarsitem.monsters.SpiderSpawner;
+import cn.linmoyu.bedwarsitem.monsters.WolfSpawner;
+import cn.linmoyu.bedwarsitem.monsters.pig_zombie.PigZombieSpawnerTask;
+import cn.linmoyu.bedwarsitem.monsters.zombie.ZombieSpawnerTask;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.game.Team;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
-public class MonsterSpawnUtils {
+public class MonsterUtils {
 
     public static Location getSpawnLocation(Location location, BlockFace blockFace) {
         Location spawnLocation = location.clone();
@@ -64,5 +72,51 @@ public class MonsterSpawnUtils {
             }
         }
         return nearest;
+    }
+
+    public static boolean isGameMonsters(Entity entity, EntityType entityType) {
+        if (entityType == EntityType.ZOMBIE && entity.hasMetadata(ZombieSpawnerTask.meta)) {
+            return true;
+        }
+        if (entityType == EntityType.PIG_ZOMBIE && entity.hasMetadata(PigZombieSpawnerTask.meta)) {
+            return true;
+        }
+        if (entityType == EntityType.SILVERFISH && entity.hasMetadata(SilverFishSpawner.meta)) {
+            return true;
+        }
+        if (entityType == EntityType.SPIDER && entity.hasMetadata(SpiderSpawner.meta)) {
+            return true;
+        }
+        if (entityType == EntityType.WOLF && entity.hasMetadata(WolfSpawner.meta)) {
+            return true;
+        }
+        return entityType == EntityType.SKELETON && entity.hasMetadata(SkeletonSpawner.meta);
+    }
+
+    public static String getMonsterMeta(Entity entity) {
+        String meta = "";
+        switch (entity.getType()) {
+            case ZOMBIE:
+                meta = ZombieSpawnerTask.meta;
+                break;
+            case PIG_ZOMBIE:
+                meta = PigZombieSpawnerTask.meta;
+                break;
+            case SILVERFISH:
+                meta = SilverFishSpawner.meta;
+                break;
+            case SKELETON:
+                meta = SkeletonSpawner.meta;
+                break;
+            case SPIDER:
+                meta = SpiderSpawner.meta;
+                break;
+            case WOLF:
+                meta = WolfSpawner.meta;
+                break;
+            default:
+                break;
+        }
+        return meta;
     }
 }

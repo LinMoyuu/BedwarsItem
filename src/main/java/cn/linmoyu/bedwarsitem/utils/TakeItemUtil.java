@@ -7,14 +7,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class TakeItemUtil {
     public static void TakeItem(Player player, ItemStack stack) {
 //        if (BedwarsRel.getInstance().getCurrentVersion().startsWith("v1_8")) {
-            if (player.getInventory().getItemInHand() != null) {
-                ItemStack itemInHand = player.getInventory().getItemInHand();
-                if (itemInHand.getType() == stack.getType()) {
-                    itemInHand.setAmount(itemInHand.getAmount() - 1);
-                    player.getInventory().setItemInHand(itemInHand);
-                    return;
-                }
+        if (player.getInventory().getItemInHand() != null) {
+            ItemStack itemInHand = player.getInventory().getItemInHand();
+            if (itemInHand.getType() == stack.getType()) {
+                itemInHand.setAmount(itemInHand.getAmount() - 1);
+                player.getInventory().setItemInHand(itemInHand);
+                return;
             }
+        }
 //        } else {
 //            if (player.getInventory().getItemInMainHand() != null) {
 //                ItemStack itemInHand = player.getInventory().getItemInMainHand();

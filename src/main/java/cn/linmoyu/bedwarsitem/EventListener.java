@@ -1,11 +1,6 @@
 package cn.linmoyu.bedwarsitem;
 
-import cn.linmoyu.bedwarsitem.monsters.SilverFishSpawner;
-import cn.linmoyu.bedwarsitem.monsters.SkeletonSpawner;
-import cn.linmoyu.bedwarsitem.monsters.SpiderSpawner;
-import cn.linmoyu.bedwarsitem.monsters.WolfSpawner;
-import cn.linmoyu.bedwarsitem.monsters.pig_zombie.PigZombieSpawnerTask;
-import cn.linmoyu.bedwarsitem.monsters.zombie.ZombieSpawnerTask;
+import cn.linmoyu.bedwarsitem.utils.MonsterUtils;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.game.Team;
@@ -35,7 +30,7 @@ public class EventListener implements Listener {
         }
 //        Entity entity = event.getEntity();
 //        EntityType entityType = event.getEntityType();
-//        if (event.isCancelled() && isGameMonsters(entity, entityType)) {
+//        if (event.isCancelled() && MonsterUtils.isGameMonsters(entity, entityType)) {
 //            event.setCancelled(false);
 //        }
     }
@@ -58,7 +53,7 @@ public class EventListener implements Listener {
     public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
         Entity entity = event.getEntity();
         EntityType entityType = event.getEntityType();
-        if (isGameMonsters(entity, entityType)) {
+        if (MonsterUtils.isGameMonsters(entity, entityType)) {
             event.setCancelled(false);
         }
     }
@@ -67,38 +62,19 @@ public class EventListener implements Listener {
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
         Entity entity = event.getEntity();
-        if (isGameMonsters(entity, entity.getType())) {
+        if (MonsterUtils.isGameMonsters(entity, entity.getType())) {
             event.setDroppedExp(0);
             event.getDrops().removeIf(itemStack -> itemStack.getType() != Material.EGG);
         }
-    }
-
-    public boolean isGameMonsters(Entity entity, EntityType entityType) {
-        if (entityType == EntityType.ZOMBIE && entity.hasMetadata(ZombieSpawnerTask.meta)) {
-            return true;
-        }
-        if (entityType == EntityType.PIG_ZOMBIE && entity.hasMetadata(PigZombieSpawnerTask.meta)) {
-            return true;
-        }
-        if (entityType == EntityType.SILVERFISH && entity.hasMetadata(SilverFishSpawner.meta)) {
-            return true;
-        }
-        if (entityType == EntityType.SPIDER && entity.hasMetadata(SpiderSpawner.meta)) {
-            return true;
-        }
-        if (entityType == EntityType.WOLF && entity.hasMetadata(WolfSpawner.meta)) {
-            return true;
-        }
-        return entityType == EntityType.SKELETON && entity.hasMetadata(SkeletonSpawner.meta);
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onMonsterAttack(EntityDamageByEntityEvent event) {
         Entity damager = event.getDamager();
         EntityType entityType = damager.getType();
-        if (!isGameMonsters(damager, entityType)) return;
+        if (!MonsterUtils.isGameMonsters(damager, entityType)) return;
         // 防止互博
-        if (isGameMonsters(event.getEntity(),event.getEntityType())) {
+        if (MonsterUtils.isGameMonsters(event.getEntity(), event.getEntityType())) {
             event.setCancelled(true);
             return;
         }
@@ -108,31 +84,9 @@ public class EventListener implements Listener {
 
         Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(player);
         if (game == null) return;
-        String meta = "";
-        switch (damager.getType()) {
-            case ZOMBIE:
-                meta = ZombieSpawnerTask.meta;
-                break;
-            case PIG_ZOMBIE:
-                meta = PigZombieSpawnerTask.meta;
-                break;
-            case SILVERFISH:
-                meta = SilverFishSpawner.meta;
-                break;
-            case SKELETON:
-                meta = SkeletonSpawner.meta;
-                break;
-            case SPIDER:
-                meta = SpiderSpawner.meta;
-                break;
-            case WOLF:
-                meta = WolfSpawner.meta;
-                break;
-            default:
-                break;
-        }
-        if (meta.isEmpty()) return;
-        Player thrower = Bukkit.getPlayerExact(damager.getMetadata(meta).get(0).asString());
+        String throwerName = MonsterUtils.getMonsterMeta(damager);
+        if (throwerName.isEmpty()) return;
+        Player thrower = Bukkit.getPlayerExact(damager.getMetadata(throwerName).get(0).asString());
         if (thrower == null || !thrower.isOnline()) {
             damager.remove();
             return;
@@ -144,23 +98,57 @@ public class EventListener implements Listener {
         }
     }
 
+    // 随便生草一个类似的就行了 原版死亡消息被设置为空了
     @EventHandler(ignoreCancelled = true)
     public void onMonsterDeath(EntityDeathEvent event) {
         Entity entity = event.getEntity();
         EntityType entityType = entity.getType();
-        if (!isGameMonsters(entity, entityType)) return;
+        if (!MonsterUtils.isGameMonsters(entity, entityType)) return;
+        // 获取死亡消息
         EntityDamageEvent damageEvent = entity.getLastDamageCause();
         EntityDamageEvent.DamageCause cause = null;
         if (damageEvent != null) {
             cause = damageEvent.getCause();
         }
+        String deathCause = "死了";
+        if (cause != null) {
+            switch (cause) {
+                case ENTITY_EXPLOSION:
+                case BLOCK_EXPLOSION:
+                    deathCause = "炸死了";
+                    break;
+                case ENTITY_ATTACK:
+                    deathCause = "杀死了";
+                    break;
+                case FALL:
+                    deathCause = "摔死了";
+                    break;
+                case FALLING_BLOCK:
+                    deathCause = "窒息了";
+                    break;
+                case PROJECTILE:
+                    deathCause = "射死了";
+                    break;
+                case VOID:
+                    deathCause = "掉出了世界";
+                    break;
+                default:
+                    break;
 
-        switch (event.getEntity().getLastDamageCause()) {
-            case cause
+            }
         }
-
+        String killerName = event.getEntity().getKiller().getDisplayName();
+        String throwerName = MonsterUtils.getMonsterMeta(entity);
+        String deathMessage = "§a§l[" + throwerName + "§a§l] §b§l的宠物" + deathCause;
+        if (killerName != null) {
+            deathMessage = "§a§l[" + throwerName + "§a§l] §b§l的宠物 " + "被" + killerName + deathCause;
+        }
+        Player killer = Bukkit.getPlayer(killerName);
+        if (killer == null) return;
+        Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(killer);
+        if (game == null) return;
+        for (Player player : game.getPlayers()) {
+            player.sendMessage(deathMessage);
+        }
     }
-
-
-
 }

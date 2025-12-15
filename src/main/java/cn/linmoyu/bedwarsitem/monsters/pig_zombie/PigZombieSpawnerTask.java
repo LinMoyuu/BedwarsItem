@@ -19,11 +19,10 @@ public class PigZombieSpawnerTask extends BukkitRunnable {
     private static final int TASK_DURATION_SECONDS = 180;
     // 任务执行间隔 (秒)
     private static final int TASK_INTERVAL_SECONDS = 30; // 30秒是瞎给的 没有测过具体数值
+    public static String meta = "BwPigZombie";
     private final Location spawnerLocation;
     // 已执行秒数
     private int elapsedSeconds = 0;
-
-    public static String meta = "BwPigZombie";
 
     public PigZombieSpawnerTask(Location spawnerLocation) {
         this.spawnerLocation = spawnerLocation;

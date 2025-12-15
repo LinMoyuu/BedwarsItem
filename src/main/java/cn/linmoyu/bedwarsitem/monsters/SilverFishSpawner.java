@@ -1,7 +1,7 @@
 package cn.linmoyu.bedwarsitem.monsters;
 
 import cn.linmoyu.bedwarsitem.BedwarsItem;
-import cn.linmoyu.bedwarsitem.utils.MonsterSpawnUtils;
+import cn.linmoyu.bedwarsitem.utils.MonsterUtils;
 import cn.linmoyu.bedwarsitem.utils.NoAIUtils;
 import cn.linmoyu.bedwarsitem.utils.TakeItemUtil;
 import io.github.bedwarsrel.BedwarsRel;
@@ -53,7 +53,7 @@ public class SilverFishSpawner implements Listener {
         }
 
         TakeItemUtil.TakeItem(player, handItem);
-        spawnSilverfish(MonsterSpawnUtils.getSpawnLocation(event.getClickedBlock().getLocation(), event.getBlockFace()), thrower);
+        spawnSilverfish(MonsterUtils.getSpawnLocation(event.getClickedBlock().getLocation(), event.getBlockFace()), thrower);
     }
 
     private void spawnSilverfish(Location location, Player thrower) {
@@ -62,7 +62,7 @@ public class SilverFishSpawner implements Listener {
         silverfish.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), thrower.getName()));
 
         // 设置自定义属性
-        silverfish.setCustomName("§a§l[" + thrower.getDisplayName() + "§a§l] §b的宠物");
+        silverfish.setCustomName("§a§l[" + thrower.getDisplayName() + "§a§l] §b§l的宠物");
 //        silverfish.setCustomNameVisible(true);
         silverfish.setRemoveWhenFarAway(false);
 
@@ -92,7 +92,7 @@ public class SilverFishSpawner implements Listener {
                     return;
                 }
 
-                Player target = MonsterSpawnUtils.findNearestEnemy(silverfish, thrower);
+                Player target = MonsterUtils.findNearestEnemy(silverfish, thrower);
                 // 设置蠹虫目标
 //                silverfish.setTarget(target);
                 if (target == null) {

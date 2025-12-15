@@ -1,18 +1,15 @@
 package cn.linmoyu.bedwarsitem.monsters;
 
 import cn.linmoyu.bedwarsitem.BedwarsItem;
-import cn.linmoyu.bedwarsitem.utils.MonsterSpawnUtils;
+import cn.linmoyu.bedwarsitem.utils.MonsterUtils;
 import cn.linmoyu.bedwarsitem.utils.NoAIUtils;
 import cn.linmoyu.bedwarsitem.utils.TakeItemUtil;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.game.GameState;
-import io.github.bedwarsrel.game.Team;
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Spider;
@@ -20,7 +17,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -55,7 +51,7 @@ public class SpiderSpawner implements Listener {
         }
 
         TakeItemUtil.TakeItem(player, handItem);
-        spawnSpider(MonsterSpawnUtils.getSpawnLocation(event.getClickedBlock().getLocation(), event.getBlockFace()), thrower);
+        spawnSpider(MonsterUtils.getSpawnLocation(event.getClickedBlock().getLocation(), event.getBlockFace()), thrower);
     }
 
     private void spawnSpider(Location location, Player thrower) {
@@ -63,7 +59,7 @@ public class SpiderSpawner implements Listener {
         spider.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), thrower.getName()));
 
         // 设置自定义属性
-        spider.setCustomName("§a§l[" + thrower.getDisplayName() + "§a§l] §b的宠物");
+        spider.setCustomName("§a§l[" + thrower.getDisplayName() + "§a§l] §b§l的宠物");
         spider.setRemoveWhenFarAway(false);
 
         new BukkitRunnable() {
@@ -90,7 +86,7 @@ public class SpiderSpawner implements Listener {
                     return;
                 }
 
-                Player target = MonsterSpawnUtils.findNearestEnemy(spider, thrower);
+                Player target = MonsterUtils.findNearestEnemy(spider, thrower);
                 // 设置目标
                 if (target == null) {
                     NoAIUtils.setAI(spider, false);
