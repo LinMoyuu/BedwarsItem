@@ -2,6 +2,10 @@ package cn.linmoyu.bedwarsitem;
 
 import cn.linmoyu.bedwarsitem.items.FireBall;
 import cn.linmoyu.bedwarsitem.items.TNT;
+import cn.linmoyu.bedwarsitem.monsters.SilverFishSpawner;
+import cn.linmoyu.bedwarsitem.monsters.SkeletonSpawner;
+import cn.linmoyu.bedwarsitem.monsters.SpiderSpawner;
+import cn.linmoyu.bedwarsitem.monsters.WolfSpawner;
 import cn.linmoyu.bedwarsitem.monsters.pig_zombie.SpawnPigZombiesCommand;
 import cn.linmoyu.bedwarsitem.monsters.zombie.SpawnZombiesCommand;
 import lombok.Getter;
@@ -21,6 +25,11 @@ public final class BedwarsItem extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(new EventListener(), this);
         Bukkit.getPluginManager().registerEvents(new FireBall(), this);
         Bukkit.getPluginManager().registerEvents(new TNT(), this);
+
+        Bukkit.getPluginManager().registerEvents(new SilverFishSpawner(), this);
+        Bukkit.getPluginManager().registerEvents(new SkeletonSpawner(), this);
+        Bukkit.getPluginManager().registerEvents(new SpiderSpawner(), this);
+        Bukkit.getPluginManager().registerEvents(new WolfSpawner(), this);
 
         getCommand("spawnzombies").setExecutor(new SpawnZombiesCommand());
         getCommand("spawnpigzombies").setExecutor(new SpawnPigZombiesCommand());

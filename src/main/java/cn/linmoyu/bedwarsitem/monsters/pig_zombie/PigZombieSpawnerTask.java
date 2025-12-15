@@ -1,15 +1,10 @@
 package cn.linmoyu.bedwarsitem.monsters.pig_zombie;
 
 import cn.linmoyu.bedwarsitem.BedwarsItem;
-import cn.linmoyu.bedwarsitem.monsters.MonsterMeta;
-import net.minecraft.server.v1_8_R3.EntityPigZombie;
-import net.minecraft.server.v1_8_R3.WorldServer;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.PigZombie;
-import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -28,6 +23,8 @@ public class PigZombieSpawnerTask extends BukkitRunnable {
     // 已执行秒数
     private int elapsedSeconds = 0;
 
+    public static String meta = "BwPigZombie";
+
     public PigZombieSpawnerTask(Location spawnerLocation) {
         this.spawnerLocation = spawnerLocation;
     }
@@ -43,7 +40,7 @@ public class PigZombieSpawnerTask extends BukkitRunnable {
         long currentPigZombieCount = spawnerLocation.getWorld().getNearbyEntities(spawnerLocation, CHECK_RADIUS, CHECK_RADIUS, CHECK_RADIUS)
                 .stream()
                 .filter(entity -> entity instanceof PigZombie)
-                .filter(entity -> entity.hasMetadata(MonsterMeta.BWPIGZOMBIE.name()))
+                .filter(entity -> entity.hasMetadata(meta))
                 .filter(entity -> !entity.isDead())
                 .count();
 
@@ -57,41 +54,19 @@ public class PigZombieSpawnerTask extends BukkitRunnable {
         elapsedSeconds += TASK_INTERVAL_SECONDS;
     }
 
-    // 为什么要NMS生成?
-    // https://github.com/BedwarsRel/BedwarsRel/blob/master/common/src/main/java/io/github/bedwarsrel/listener/EntityListener.java#L138
     private void spawnPigZombie() {
-        // 1. 获取 NMS WorldServer 对象
-        WorldServer nmsWorld = ((CraftWorld) spawnerLocation.getWorld()).getHandle();
+        PigZombie pigZombie = (PigZombie) spawnerLocation.getWorld().spawnEntity(
+                spawnerLocation,
+                EntityType.PIG_ZOMBIE
+        );
 
-        // 2. 创建一个 NMS 僵尸实体
-        EntityPigZombie nmsPigZombie = new EntityPigZombie(nmsWorld);
-
-        // 3. 设置僵尸的位置
-        nmsPigZombie.setPosition(spawnerLocation.getX(), spawnerLocation.getY(), spawnerLocation.getZ());
-
-        // 4. 设置装备
-        ItemStack bukkitEggs = new ItemStack(Material.EGG, 8);
-        // 将 Bukkit ItemStack 转换为 NMS ItemStack
-        net.minecraft.server.v1_8_R3.ItemStack nmsEggs = CraftItemStack.asNMSCopy(bukkitEggs);
-        // 设置到主手
-        nmsPigZombie.setEquipment(0, nmsEggs);
-
-        // 5. 设置其他属性
-        nmsWorld.addEntity(nmsPigZombie, CreatureSpawnEvent.SpawnReason.CUSTOM);
-
-        // 7. 获取 Bukkit 实体并设置其他属性 (这是更安全和推荐的方式)
-        PigZombie bukkitPigZombie = (PigZombie) nmsPigZombie.getBukkitEntity();
-        // 设置头盔（防止阳光烧伤）
-        bukkitPigZombie.getEquipment().setHelmet(new ItemStack(Material.LEATHER_HELMET));
-        // 设置头盔不掉落
-        bukkitPigZombie.getEquipment().setHelmetDropChance(0.0f);
-        // 设置主手鸡蛋的掉落概率为100%
-        bukkitPigZombie.getEquipment().setItemInHandDropChance(1.0f);
-        // 名字显示
-        bukkitPigZombie.setCustomNameVisible(false);
-        // 远处移除
-        bukkitPigZombie.setRemoveWhenFarAway(false);
-        bukkitPigZombie.setMetadata(MonsterMeta.BWPIGZOMBIE.name(), new FixedMetadataValue(BedwarsItem.getInstance(), true));
+        pigZombie.getEquipment().setHelmet(new ItemStack(Material.LEATHER_HELMET));
+        pigZombie.getEquipment().setItemInHand(new ItemStack(Material.EGG, 8));
+        pigZombie.getEquipment().setHelmetDropChance(0.0f); // 头盔不掉落
+        pigZombie.getEquipment().setItemInHandDropChance(1.0f); // 主手物品100%掉落
+        pigZombie.setCustomNameVisible(false);
+        pigZombie.setRemoveWhenFarAway(false);
+        pigZombie.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), true));
     }
 
 

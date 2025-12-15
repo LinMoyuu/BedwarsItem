@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 public class Utils {
+
     public static boolean isCanPlace(Game game, Location location) {
         Block block = location.getBlock();
         if (!game.getRegion().isInRegion(location)) {

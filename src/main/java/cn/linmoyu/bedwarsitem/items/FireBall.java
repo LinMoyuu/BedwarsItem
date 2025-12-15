@@ -41,11 +41,12 @@ public class FireBall implements Listener {
         if (game.isSpectator(player) || !game.getPlayers().contains(player)) {
             return;
         }
-        e.setCancelled(true);
 
         Fireball fireball = player.launchProjectile(Fireball.class);
         fireball.setBounce(false);
         fireball.setShooter(player);
+        fireball.setYield((float) 0.5);
+        fireball.setVelocity(fireball.getDirection().multiply(7));
         fireball.setMetadata("FireBall", new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + "." + player.getName()));
         TakeItemUtil.TakeItem(player, handItem);
     }
