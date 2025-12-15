@@ -6,3 +6,7 @@ author: LinMoyu
 depend:
   - BedwarsRel
   - BedwarsScoreBoardAddon
+
+commands:
+  spawnzombies:
+  spawnpigzombies:
