@@ -9,6 +9,7 @@ import cn.linmoyu.bedwarsitem.monsters.zombie.ZombieSpawnerTask;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.game.Team;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
@@ -118,5 +119,14 @@ public class MonsterUtils {
                 break;
         }
         return meta;
+    }
+
+    public static String getThrowerName(Entity entity, String meta) {
+        String throwerName = meta;
+        if (entity == null || meta == null || meta.isEmpty()) return throwerName;
+        throwerName = entity.getMetadata(meta).get(0).asString();
+        Player thrower = Bukkit.getPlayerExact(throwerName);
+        if (thrower != null) thrower.getDisplayName();
+        return throwerName;
     }
 }

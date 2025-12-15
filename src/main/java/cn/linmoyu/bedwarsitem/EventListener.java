@@ -68,6 +68,7 @@ public class EventListener implements Listener {
         }
     }
 
+    // 攻击指定玩家时取消攻击
     @EventHandler(ignoreCancelled = true)
     public void onMonsterAttack(EntityDamageByEntityEvent event) {
         Entity damager = event.getDamager();
@@ -84,9 +85,9 @@ public class EventListener implements Listener {
 
         Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(player);
         if (game == null) return;
-        String throwerName = MonsterUtils.getMonsterMeta(damager);
-        if (throwerName.isEmpty()) return;
-        Player thrower = Bukkit.getPlayerExact(damager.getMetadata(throwerName).get(0).asString());
+        String meta = MonsterUtils.getMonsterMeta(damager);
+        if (meta.isEmpty()) return;
+        Player thrower = Bukkit.getPlayerExact(MonsterUtils.getThrowerName(damager, meta));
         if (thrower == null || !thrower.isOnline()) {
             damager.remove();
             return;
@@ -98,7 +99,7 @@ public class EventListener implements Listener {
         }
     }
 
-    // 随便生草一个类似的就行了 原版死亡消息被设置为空了
+    // 怪物死亡消息 随便生草一个类似的就行了 原版死亡消息被设置为空了
     @EventHandler(ignoreCancelled = true)
     public void onMonsterDeath(EntityDeathEvent event) {
         Entity entity = event.getEntity();
@@ -138,17 +139,25 @@ public class EventListener implements Listener {
             }
         }
         String killerName = event.getEntity().getKiller().getDisplayName();
-        String throwerName = MonsterUtils.getMonsterMeta(entity);
+        String throwerName = MonsterUtils.getThrowerName(entity, MonsterUtils.getMonsterMeta(entity));
         String deathMessage = "§a§l[" + throwerName + "§a§l] §b§l的宠物" + deathCause;
         if (killerName != null) {
-            deathMessage = "§a§l[" + throwerName + "§a§l] §b§l的宠物 " + "被" + killerName + deathCause;
+            deathMessage = "§a§l[" + throwerName + "§a§l] §b§l的宠物" + "§f被" + killerName + deathCause;
         }
-        Player killer = Bukkit.getPlayer(killerName);
-        if (killer == null) return;
-        Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(killer);
-        if (game == null) return;
-        for (Player player : game.getPlayers()) {
-            player.sendMessage(deathMessage);
+        Player killer = Bukkit.getPlayer(throwerName);
+        if (killer != null) {
+            Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(killer);
+            if (game == null) return;
+            for (Player player : game.getPlayers()) {
+                player.sendMessage(deathMessage);
+            }
+        } else {
+            Game game = BedwarsRel.getInstance().getGameManager().getGameByLocation(entity.getLocation());
+            if (game == null) return;
+            for (Player player : game.getPlayers()) {
+                player.sendMessage(deathMessage);
+            }
+
         }
     }
 }
