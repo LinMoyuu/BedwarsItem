@@ -2,7 +2,6 @@ package cn.linmoyu.bedwarsitem.monsters;
 
 import cn.linmoyu.bedwarsitem.BedwarsItem;
 import cn.linmoyu.bedwarsitem.utils.MonsterUtils;
-import cn.linmoyu.bedwarsitem.utils.NoAIUtils;
 import cn.linmoyu.bedwarsitem.utils.TakeItemUtil;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
@@ -88,12 +87,13 @@ public class SpiderSpawner implements Listener {
 
                 Player target = MonsterUtils.findNearestEnemy(spider, thrower);
                 // 设置目标
-                if (target == null) {
-                    NoAIUtils.setAI(spider, false);
-                } else {
-                    spider.setTarget(target);
-                    NoAIUtils.setAI(spider, true);
-                }
+                spider.setTarget(target);
+//                if (target == null) {
+//                    NoAIUtils.setAI(spider, false);
+//                } else {
+//                    spider.setTarget(target);
+//                    NoAIUtils.setAI(spider, true);
+//                }
             }
         }.runTaskTimer(BedwarsItem.getInstance(), 0L, 20L);
     }

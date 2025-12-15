@@ -2,7 +2,6 @@ package cn.linmoyu.bedwarsitem.monsters;
 
 import cn.linmoyu.bedwarsitem.BedwarsItem;
 import cn.linmoyu.bedwarsitem.utils.MonsterUtils;
-import cn.linmoyu.bedwarsitem.utils.NoAIUtils;
 import cn.linmoyu.bedwarsitem.utils.TakeItemUtil;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
@@ -94,13 +93,13 @@ public class SilverFishSpawner implements Listener {
 
                 Player target = MonsterUtils.findNearestEnemy(silverfish, thrower);
                 // 设置蠹虫目标
-//                silverfish.setTarget(target);
-                if (target == null) {
-                    NoAIUtils.setAI(silverfish, false);
-                } else {
-                    silverfish.setTarget(target);
-                    NoAIUtils.setAI(silverfish, true);
-                }
+                silverfish.setTarget(target);
+//                if (target == null) {
+//                    NoAIUtils.setAI(silverfish, false);
+//                } else {
+//                    silverfish.setTarget(target);
+//                    NoAIUtils.setAI(silverfish, true);
+//                }
             }
         }.runTaskTimer(BedwarsItem.getInstance(), 0L, 20L);
     }

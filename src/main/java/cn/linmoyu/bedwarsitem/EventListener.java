@@ -105,6 +105,7 @@ public class EventListener implements Listener {
         Entity entity = event.getEntity();
         EntityType entityType = entity.getType();
         if (!MonsterUtils.isGameMonsters(entity, entityType)) return;
+        if (entityType == EntityType.ZOMBIE || entityType == EntityType.PIG_ZOMBIE) return;
         // 获取死亡消息
         EntityDamageEvent damageEvent = entity.getLastDamageCause();
         EntityDamageEvent.DamageCause cause = null;
@@ -135,7 +136,6 @@ public class EventListener implements Listener {
                     break;
                 default:
                     break;
-
             }
         }
         String killerName = event.getEntity().getKiller().getDisplayName();

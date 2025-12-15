@@ -2,7 +2,6 @@ package cn.linmoyu.bedwarsitem.monsters;
 
 import cn.linmoyu.bedwarsitem.BedwarsItem;
 import cn.linmoyu.bedwarsitem.utils.MonsterUtils;
-import cn.linmoyu.bedwarsitem.utils.NoAIUtils;
 import cn.linmoyu.bedwarsitem.utils.TakeItemUtil;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
@@ -93,12 +92,13 @@ public class SkeletonSpawner implements Listener {
 
                 Player target = MonsterUtils.findNearestEnemy(skeleton, thrower);
                 // 设置蠹虫目标
-                if (target == null) {
-                    NoAIUtils.setAI(skeleton, false);
-                } else {
-                    skeleton.setTarget(target);
-                    NoAIUtils.setAI(skeleton, true);
-                }
+                skeleton.setTarget(target);
+//                if (target == null) {
+//                    NoAIUtils.setAI(skeleton, false);
+//                } else {
+//                    skeleton.setTarget(target);
+//                    NoAIUtils.setAI(skeleton, true);
+//                }
             }
         }.runTaskTimer(BedwarsItem.getInstance(), 0L, 20L);
     }

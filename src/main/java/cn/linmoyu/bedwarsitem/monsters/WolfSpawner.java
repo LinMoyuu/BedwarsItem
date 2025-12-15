@@ -2,7 +2,6 @@ package cn.linmoyu.bedwarsitem.monsters;
 
 import cn.linmoyu.bedwarsitem.BedwarsItem;
 import cn.linmoyu.bedwarsitem.utils.MonsterUtils;
-import cn.linmoyu.bedwarsitem.utils.NoAIUtils;
 import cn.linmoyu.bedwarsitem.utils.TakeItemUtil;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
@@ -87,12 +86,13 @@ public class WolfSpawner implements Listener {
 
                 Player target = MonsterUtils.findNearestEnemy(wolf, thrower);
                 // 设置目标
-                if (target == null) {
-                    NoAIUtils.setAI(wolf, false);
-                } else {
-                    wolf.setTarget(target);
-                    NoAIUtils.setAI(wolf, true);
-                }
+                wolf.setTarget(target);
+//                if (target == null) {
+//                    NoAIUtils.setAI(wolf, false);
+//                } else {
+//                    wolf.setTarget(target);
+//                    NoAIUtils.setAI(wolf, true);
+//                }
             }
         }.runTaskTimer(BedwarsItem.getInstance(), 0L, 20L);
     }
