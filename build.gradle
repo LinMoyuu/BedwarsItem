@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'org.spigotmc:spigot:1.12.2-R0.1-SNAPSHOT'
+    compileOnly 'org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT'
     implementation fileTree(dir: 'lib', includes: ['*.jar'])
     //lombok
     compileOnly("org.projectlombok:lombok:1.18.38")
