@@ -4,11 +4,10 @@ import cn.linmoyu.bedwarsitem.utils.MonsterUtils;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.game.Team;
+import net.minecraft.server.v1_8_R3.EntityFishingHook;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -51,8 +50,9 @@ public class EventListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
         Entity entity = event.getEntity();
-        EntityType entityType = event.getEntityType();
-        if (MonsterUtils.isGameMonsters(entity) && event.getDamager() instanceof Player) {
+        if (MonsterUtils.isGameMonsters(entity) && (event.getDamager() instanceof Player
+                || event.getDamager() instanceof Egg || event.getDamager() instanceof EntityFishingHook
+                || event.getDamager() instanceof Fireball || event.getDamager() instanceof TNTPrimed)) {
             event.setCancelled(false);
         }
     }
@@ -78,11 +78,9 @@ public class EventListener implements Listener {
 
         Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(player);
         if (game == null) return;
-        Player thrower = MonsterUtils.getThrower(damager, MonsterUtils.getMonsterMeta(entityType));
-        if (thrower == null || !thrower.isOnline()) {
-            damager.remove();
-            return;
-        }
+        String monsterMeta = MonsterUtils.getMonsterMeta(entityType);
+        Player thrower = MonsterUtils.getThrower(damager, monsterMeta);
+        if (thrower == null) return;
         Team throwerTeam = game.getPlayerTeam(thrower);
         Team playerTeam = game.getPlayerTeam(player);
         if (game.isSpectator(player) || player.getGameMode() == GameMode.SPECTATOR || thrower == player || throwerTeam == null || playerTeam == null || throwerTeam == playerTeam) {
@@ -96,7 +94,8 @@ public class EventListener implements Listener {
         Entity entity = event.getEntity();
         EntityType entityType = entity.getType();
         if (!MonsterUtils.isGameMonsters(entity)) return;
-        if (entityType == EntityType.ZOMBIE || entityType == EntityType.PIG_ZOMBIE) return;
+        String monsterMeta = MonsterUtils.getMonsterMeta(entityType);
+        if (monsterMeta.isEmpty()) return;
         // 获取死亡消息
         EntityDamageEvent damageEvent = entity.getLastDamageCause();
         EntityDamageEvent.DamageCause cause = null;
