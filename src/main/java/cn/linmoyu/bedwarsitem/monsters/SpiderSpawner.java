@@ -50,12 +50,13 @@ public class SpiderSpawner implements Listener {
         }
 
         TakeItemUtil.TakeItem(player, handItem);
-        spawnSpider(MonsterUtils.getSpawnLocation(event.getClickedBlock().getLocation(), event.getBlockFace()), thrower);
+        Location spawnLocation = MonsterUtils.getSpawnLocation(event.getClickedBlock().getLocation(), event.getBlockFace());
+        spawnSpider(game, spawnLocation, thrower);
     }
 
-    private void spawnSpider(Location location, Player thrower) {
+    private void spawnSpider(Game game, Location location, Player thrower) {
         Spider spider = (Spider) location.getWorld().spawnEntity(location, EntityType.SPIDER);
-        spider.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), thrower.getName()));
+        spider.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + ":" + thrower.getName()));
 
         // 设置自定义属性
         spider.setCustomName("§a§l[" + thrower.getDisplayName() + "§a§l] §b§l的宠物");

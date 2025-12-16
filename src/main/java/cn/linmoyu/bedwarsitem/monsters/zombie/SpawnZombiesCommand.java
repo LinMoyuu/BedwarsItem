@@ -28,7 +28,7 @@ public class SpawnZombiesCommand implements CommandExecutor {
 
             if (isGoldSpawner) {
                 // 为每个金锭刷新点启动一个生成任务
-                new ZombieSpawnerTask(spawner.getLocation()).runTaskTimer(BedwarsItem.getInstance(), 0L, 300L);
+                new ZombieSpawnerTask(game, spawner.getLocation()).runTaskTimer(BedwarsItem.getInstance(), 0L, 300L);
             }
         }
         return true;

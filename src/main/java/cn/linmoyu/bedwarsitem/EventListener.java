@@ -13,10 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -139,25 +136,17 @@ public class EventListener implements Listener {
             }
         }
         String killerName = event.getEntity().getKiller().getDisplayName();
-        String throwerName = MonsterUtils.getThrowerName(entity, MonsterUtils.getMonsterMeta(entity));
+        String meta = MonsterUtils.getMonsterMeta(entity);
+        String throwerName = MonsterUtils.getThrowerName(entity, meta);
         String deathMessage = "§a§l[" + throwerName + "§a§l] §b§l的宠物" + deathCause;
         if (killerName != null) {
             deathMessage = "§a§l[" + throwerName + "§a§l] §b§l的宠物" + "§f被" + killerName + deathCause;
         }
-        Player killer = Bukkit.getPlayer(throwerName);
-        if (killer != null) {
-            Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(killer);
-            if (game == null) return;
+        Game game = BedwarsRel.getInstance().getGameManager().getGame(MonsterUtils.getGameName(entity, meta));
+        if (game != null) {
             for (Player player : game.getPlayers()) {
                 player.sendMessage(deathMessage);
             }
-        } else {
-            Game game = BedwarsRel.getInstance().getGameManager().getGameByLocation(entity.getLocation());
-            if (game == null) return;
-            for (Player player : game.getPlayers()) {
-                player.sendMessage(deathMessage);
-            }
-
         }
     }
 }

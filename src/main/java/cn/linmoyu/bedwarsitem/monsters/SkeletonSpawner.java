@@ -52,13 +52,14 @@ public class SkeletonSpawner implements Listener {
         }
 
         TakeItemUtil.TakeItem(player, handItem);
-        spawnSkeleton(MonsterUtils.getSpawnLocation(event.getClickedBlock().getLocation(), event.getBlockFace()), thrower);
+        Location spawnLocation = MonsterUtils.getSpawnLocation(event.getClickedBlock().getLocation(), event.getBlockFace());
+        spawnSkeleton(game, spawnLocation, thrower);
     }
 
-    private void spawnSkeleton(Location location, Player thrower) {
+    private void spawnSkeleton(Game game, Location location, Player thrower) {
         // 生成蠹虫
         Skeleton skeleton = (Skeleton) location.getWorld().spawnEntity(location, EntityType.SKELETON);
-        skeleton.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), thrower.getName()));
+        skeleton.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + ":" + thrower.getName()));
 
         // 设置自定义属性
         skeleton.setCustomName("§a§l[" + thrower.getDisplayName() + "§a§l] §b§l的宠物");

@@ -121,10 +121,21 @@ public class MonsterUtils {
         return meta;
     }
 
+    public static String getGameName(Entity entity, String meta) {
+        String gameName = meta;
+        if (entity == null || meta == null || meta.isEmpty()) return gameName;
+        String[] metas = entity.getMetadata(meta).get(0).asString().split(":");
+        if (metas.length < 1) return gameName;
+        gameName = metas[0];
+        return gameName;
+    }
+
     public static String getThrowerName(Entity entity, String meta) {
         String throwerName = meta;
         if (entity == null || meta == null || meta.isEmpty()) return throwerName;
-        throwerName = entity.getMetadata(meta).get(0).asString();
+        String[] metas = entity.getMetadata(meta).get(0).asString().split(":");
+        if (metas.length < 2) return throwerName;
+        throwerName = metas[1];
         Player thrower = Bukkit.getPlayerExact(throwerName);
         if (thrower != null) thrower.getDisplayName();
         return throwerName;

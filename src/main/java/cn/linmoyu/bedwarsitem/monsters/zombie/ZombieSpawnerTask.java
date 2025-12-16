@@ -1,6 +1,7 @@
 package cn.linmoyu.bedwarsitem.monsters.zombie;
 
 import cn.linmoyu.bedwarsitem.BedwarsItem;
+import io.github.bedwarsrel.game.Game;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
@@ -11,6 +12,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class ZombieSpawnerTask extends BukkitRunnable {
 
+    public static String meta = "BwZombie";
+    private final Location spawnerLocation;
+    private final Game game;
     // 期望僵尸数量
     private static final int DESIRED_ZOMBIE_COUNT = 2;
     // 半径检测范围
@@ -19,12 +23,11 @@ public class ZombieSpawnerTask extends BukkitRunnable {
     private static final int TASK_DURATION_SECONDS = 180;
     // 任务执行间隔 (秒)
     private static final int TASK_INTERVAL_SECONDS = 30; // 30秒是瞎给的 没有测过具体数值
-    public static String meta = "BwZombie";
-    private final Location spawnerLocation;
     // 已执行秒数
     private int elapsedSeconds = 0;
 
-    public ZombieSpawnerTask(Location spawnerLocation) {
+    public ZombieSpawnerTask(Game game, Location spawnerLocation) {
+        this.game = game;
         this.spawnerLocation = spawnerLocation;
     }
 
@@ -65,7 +68,7 @@ public class ZombieSpawnerTask extends BukkitRunnable {
         zombie.getEquipment().setItemInHandDropChance(1.0f); // 主手物品100%掉落
         zombie.setCustomNameVisible(false);
         zombie.setRemoveWhenFarAway(false);
-        zombie.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), true));
+        zombie.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), game.getName()));
     }
 
 

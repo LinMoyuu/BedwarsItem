@@ -52,13 +52,14 @@ public class SilverFishSpawner implements Listener {
         }
 
         TakeItemUtil.TakeItem(player, handItem);
-        spawnSilverfish(MonsterUtils.getSpawnLocation(event.getClickedBlock().getLocation(), event.getBlockFace()), thrower);
+        Location spawnLocation = MonsterUtils.getSpawnLocation(event.getClickedBlock().getLocation(), event.getBlockFace());
+        spawnSilverfish(game, spawnLocation, thrower);
     }
 
-    private void spawnSilverfish(Location location, Player thrower) {
+    private void spawnSilverfish(Game game, Location location, Player thrower) {
         // 生成蠹虫
         Silverfish silverfish = (Silverfish) location.getWorld().spawnEntity(location, EntityType.SILVERFISH);
-        silverfish.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), thrower.getName()));
+        silverfish.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + ":" + thrower.getName()));
 
         // 设置自定义属性
         silverfish.setCustomName("§a§l[" + thrower.getDisplayName() + "§a§l] §b§l的宠物");

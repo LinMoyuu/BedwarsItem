@@ -50,12 +50,13 @@ public class WolfSpawner implements Listener {
         }
 
         TakeItemUtil.TakeItem(player, handItem);
-        spawnWolf(MonsterUtils.getSpawnLocation(event.getClickedBlock().getLocation(), event.getBlockFace()), thrower);
+        Location spawnLocation = MonsterUtils.getSpawnLocation(event.getClickedBlock().getLocation(), event.getBlockFace());
+        spawnWolf(game, spawnLocation, thrower);
     }
 
-    private void spawnWolf(Location location, Player thrower) {
+    private void spawnWolf(Game game, Location location, Player thrower) {
         Wolf wolf = (Wolf) location.getWorld().spawnEntity(location, EntityType.WOLF);
-        wolf.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), thrower.getName()));
+        wolf.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + ":" + thrower.getName()));
 
         // 设置自定义属性
         wolf.setCustomName("§a§l[" + thrower.getDisplayName() + "§a§l] §b§l的宠物");
