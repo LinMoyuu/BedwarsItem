@@ -6,7 +6,6 @@ import cn.linmoyu.bedwarsitem.utils.TakeItemUtil;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.game.GameState;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
@@ -65,8 +64,9 @@ public class WolfSpawner implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                Player thrower = Bukkit.getPlayerExact(wolf.getMetadata(meta).get(0).asString());
+                Player thrower = MonsterUtils.getThrower(wolf, meta);
                 if (wolf.isDead() || !wolf.isValid() || thrower == null || !thrower.isOnline()) {
+                    wolf.remove();
                     this.cancel();
                     return;
                 }
@@ -80,7 +80,9 @@ public class WolfSpawner implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                if (wolf.isDead() || !wolf.isValid()) {
+                Player thrower = MonsterUtils.getThrower(wolf, meta);
+                if (wolf.isDead() || !wolf.isValid() || thrower == null || !thrower.isOnline()) {
+                    wolf.remove();
                     this.cancel();
                     return;
                 }

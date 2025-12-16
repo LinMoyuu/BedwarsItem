@@ -6,7 +6,6 @@ import cn.linmoyu.bedwarsitem.utils.TakeItemUtil;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.game.GameState;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -70,8 +69,9 @@ public class SilverFishSpawner implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                Player thrower = Bukkit.getPlayerExact(silverfish.getMetadata(meta).get(0).asString());
+                Player thrower = MonsterUtils.getThrower(silverfish, meta);
                 if (silverfish.isDead() || !silverfish.isValid() || thrower == null || !thrower.isOnline()) {
+                    silverfish.remove();
                     this.cancel();
                     return;
                 }
@@ -86,8 +86,9 @@ public class SilverFishSpawner implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                Player thrower = Bukkit.getPlayerExact(silverfish.getMetadata(meta).get(0).asString());
+                Player thrower = MonsterUtils.getThrower(silverfish, meta);
                 if (silverfish.isDead() || !silverfish.isValid() || thrower == null || !thrower.isOnline()) {
+                    silverfish.remove();
                     this.cancel();
                     return;
                 }

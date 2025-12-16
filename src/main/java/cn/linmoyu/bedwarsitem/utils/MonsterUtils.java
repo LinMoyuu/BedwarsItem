@@ -75,7 +75,8 @@ public class MonsterUtils {
         return nearest;
     }
 
-    public static boolean isGameMonsters(Entity entity, EntityType entityType) {
+    public static boolean isGameMonsters(Entity entity) {
+        EntityType entityType = entity.getType();
         if (entityType == EntityType.ZOMBIE && entity.hasMetadata(ZombieSpawnerTask.meta)) {
             return true;
         }
@@ -94,9 +95,9 @@ public class MonsterUtils {
         return entityType == EntityType.SKELETON && entity.hasMetadata(SkeletonSpawner.meta);
     }
 
-    public static String getMonsterMeta(Entity entity) {
+    public static String getMonsterMeta(EntityType entityType) {
         String meta = "";
-        switch (entity.getType()) {
+        switch (entityType) {
             case ZOMBIE:
                 meta = ZombieSpawnerTask.meta;
                 break;
@@ -130,14 +131,12 @@ public class MonsterUtils {
         return gameName;
     }
 
-    public static String getThrowerName(Entity entity, String meta) {
-        String throwerName = meta;
-        if (entity == null || meta == null || meta.isEmpty()) return throwerName;
+    public static Player getThrower(Entity entity, String meta) {
+        String throwerName;
+        if (entity == null || meta == null || meta.isEmpty()) return null;
         String[] metas = entity.getMetadata(meta).get(0).asString().split(":");
-        if (metas.length < 2) return throwerName;
+        if (metas.length < 2) return null;
         throwerName = metas[1];
-        Player thrower = Bukkit.getPlayerExact(throwerName);
-        if (thrower != null) thrower.getDisplayName();
-        return throwerName;
+        return Bukkit.getPlayerExact(throwerName);
     }
 }

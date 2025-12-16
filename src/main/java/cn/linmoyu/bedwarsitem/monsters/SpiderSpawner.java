@@ -6,7 +6,6 @@ import cn.linmoyu.bedwarsitem.utils.TakeItemUtil;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.game.GameState;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
@@ -65,7 +64,7 @@ public class SpiderSpawner implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                Player thrower = Bukkit.getPlayerExact(spider.getMetadata(meta).get(0).asString());
+                Player thrower = MonsterUtils.getThrower(spider, meta);
                 if (spider.isDead() || !spider.isValid() || thrower == null || !thrower.isOnline()) {
                     spider.remove();
                     this.cancel();
@@ -81,7 +80,9 @@ public class SpiderSpawner implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                if (spider.isDead() || !spider.isValid()) {
+                Player thrower = MonsterUtils.getThrower(spider, meta);
+                if (spider.isDead() || !spider.isValid() || thrower == null || !thrower.isOnline()) {
+                    spider.remove();
                     this.cancel();
                     return;
                 }

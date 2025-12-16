@@ -4,7 +4,6 @@ import cn.linmoyu.bedwarsitem.utils.MonsterUtils;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.game.Team;
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -13,7 +12,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.*;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -50,7 +52,7 @@ public class EventListener implements Listener {
     public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
         Entity entity = event.getEntity();
         EntityType entityType = event.getEntityType();
-        if (MonsterUtils.isGameMonsters(entity, entityType)) {
+        if (MonsterUtils.isGameMonsters(entity) && event.getDamager() instanceof Player) {
             event.setCancelled(false);
         }
     }
@@ -59,32 +61,24 @@ public class EventListener implements Listener {
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
         Entity entity = event.getEntity();
-        if (MonsterUtils.isGameMonsters(entity, entity.getType())) {
+        if (MonsterUtils.isGameMonsters(entity)) {
             event.setDroppedExp(0);
             event.getDrops().removeIf(itemStack -> itemStack.getType() != Material.EGG);
         }
     }
 
     // 攻击指定玩家时取消攻击
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onMonsterAttack(EntityDamageByEntityEvent event) {
         Entity damager = event.getDamager();
         EntityType entityType = damager.getType();
-        if (!MonsterUtils.isGameMonsters(damager, entityType)) return;
-        // 防止互博
-        if (MonsterUtils.isGameMonsters(event.getEntity(), event.getEntityType())) {
-            event.setCancelled(true);
-            return;
-        }
-        if (event.getEntity() instanceof Player) return;
+        if (!MonsterUtils.isGameMonsters(damager) || !(event.getEntity() instanceof Player)) return;
         Player player = (Player) event.getEntity();
         if (player == null) return;
 
         Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(player);
         if (game == null) return;
-        String meta = MonsterUtils.getMonsterMeta(damager);
-        if (meta.isEmpty()) return;
-        Player thrower = Bukkit.getPlayerExact(MonsterUtils.getThrowerName(damager, meta));
+        Player thrower = MonsterUtils.getThrower(damager, MonsterUtils.getMonsterMeta(entityType));
         if (thrower == null || !thrower.isOnline()) {
             damager.remove();
             return;
@@ -101,7 +95,7 @@ public class EventListener implements Listener {
     public void onMonsterDeath(EntityDeathEvent event) {
         Entity entity = event.getEntity();
         EntityType entityType = entity.getType();
-        if (!MonsterUtils.isGameMonsters(entity, entityType)) return;
+        if (!MonsterUtils.isGameMonsters(entity)) return;
         if (entityType == EntityType.ZOMBIE || entityType == EntityType.PIG_ZOMBIE) return;
         // 获取死亡消息
         EntityDamageEvent damageEvent = entity.getLastDamageCause();
@@ -135,14 +129,16 @@ public class EventListener implements Listener {
                     break;
             }
         }
-        String killerName = event.getEntity().getKiller().getDisplayName();
-        String meta = MonsterUtils.getMonsterMeta(entity);
-        String throwerName = MonsterUtils.getThrowerName(entity, meta);
-        String deathMessage = "§a§l[" + throwerName + "§a§l] §b§l的宠物" + deathCause;
-        if (killerName != null) {
-            deathMessage = "§a§l[" + throwerName + "§a§l] §b§l的宠物" + "§f被" + killerName + deathCause;
+        Player killer = event.getEntity().getKiller();
+        Player thrower = MonsterUtils.getThrower(entity, MonsterUtils.getMonsterMeta(entityType));
+        String deathMessage = entity.getCustomName() + "§f" + deathCause;
+        if (killer != null) {
+            deathMessage = entity.getCustomName() + "§f" + killer.getDisplayName() + deathCause;
         }
-        Game game = BedwarsRel.getInstance().getGameManager().getGame(MonsterUtils.getGameName(entity, meta));
+        if (thrower == null) {
+            return;
+        }
+        Game game = BedwarsRel.getInstance().getGameManager().getGame(MonsterUtils.getGameName(entity, MonsterUtils.getMonsterMeta(entityType)));
         if (game != null) {
             for (Player player : game.getPlayers()) {
                 player.sendMessage(deathMessage);

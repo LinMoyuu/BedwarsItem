@@ -6,10 +6,8 @@ import cn.linmoyu.bedwarsitem.utils.TakeItemUtil;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.game.GameState;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Skeleton;
@@ -17,7 +15,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -60,6 +57,9 @@ public class SkeletonSpawner implements Listener {
         // 生成蠹虫
         Skeleton skeleton = (Skeleton) location.getWorld().spawnEntity(location, EntityType.SKELETON);
         skeleton.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + ":" + thrower.getName()));
+        skeleton.getEquipment().setHelmet(new ItemStack(Material.LEATHER_HELMET));
+        skeleton.getEquipment().setHelmetDropChance(0.0f); // 头盔不掉落
+        skeleton.getEquipment().setItemInHandDropChance(0.0f); // 不掉落
 
         // 设置自定义属性
         skeleton.setCustomName("§a§l[" + thrower.getDisplayName() + "§a§l] §b§l的宠物");
@@ -69,8 +69,9 @@ public class SkeletonSpawner implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                Player thrower = Bukkit.getPlayerExact(skeleton.getMetadata(meta).get(0).asString());
+                Player thrower = MonsterUtils.getThrower(skeleton, meta);
                 if (skeleton.isDead() || !skeleton.isValid() || thrower == null || !thrower.isOnline()) {
+                    skeleton.remove();
                     this.cancel();
                     return;
                 }
@@ -85,8 +86,9 @@ public class SkeletonSpawner implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                Player thrower = Bukkit.getPlayerExact(skeleton.getMetadata(meta).get(0).asString());
+                Player thrower = MonsterUtils.getThrower(skeleton, meta);
                 if (skeleton.isDead() || !skeleton.isValid() || thrower == null || !thrower.isOnline()) {
+                    skeleton.remove();
                     this.cancel();
                     return;
                 }
@@ -102,14 +104,6 @@ public class SkeletonSpawner implements Listener {
 //                }
             }
         }.runTaskTimer(BedwarsItem.getInstance(), 0L, 20L);
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    public void onSkeletonChangeBlock(EntityChangeBlockEvent event) {
-        Entity entity = event.getEntity();
-        if (entity.getType() == EntityType.SKELETON && entity.hasMetadata(SkeletonSpawner.meta)) {
-            event.setCancelled(true);
-        }
     }
 
 }
