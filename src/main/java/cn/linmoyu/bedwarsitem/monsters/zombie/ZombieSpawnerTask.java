@@ -60,7 +60,7 @@ public class ZombieSpawnerTask extends BukkitRunnable {
         zombie.getEquipment().setItemInHandDropChance(1.0f); // 主手物品100%掉落
         zombie.setCustomNameVisible(false);
         zombie.setRemoveWhenFarAway(false);
-        zombie.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), game.getName()));
+        zombie.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + ":" + spawnerLocation));
     }
 
 

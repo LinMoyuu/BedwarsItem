@@ -16,9 +16,9 @@ public class PigZombieSpawnerTask extends BukkitRunnable {
     private final Location spawnerLocation;
     private final Game game;
     // 期望僵尸数量
-    private static final int DESIRED_PIG_ZOMBIE_COUNT = 2;
-    // 半径检测范围
-    private static final double CHECK_RADIUS = 10;
+    private static final int DESIRED_PIG_ZOMBIE_COUNT = 1;
+//    // 半径检测范围
+//    private static final double CHECK_RADIUS = 3;
 
     public PigZombieSpawnerTask(Game game, Location spawnerLocation) {
         this.game = game;
@@ -32,11 +32,19 @@ public class PigZombieSpawnerTask extends BukkitRunnable {
 //            removeRemainingZombies();
             return;
         }
+//
+//        long currentPigZombieCount = spawnerLocation.getWorld().getNearbyEntities(spawnerLocation, CHECK_RADIUS, CHECK_RADIUS, CHECK_RADIUS)
+//                .stream()
+//                .filter(entity -> entity instanceof PigZombie)
+//                .filter(entity -> entity.hasMetadata(meta))
+//                .filter(entity -> !entity.isDead())
+//                .count();
 
-        long currentPigZombieCount = spawnerLocation.getWorld().getNearbyEntities(spawnerLocation, CHECK_RADIUS, CHECK_RADIUS, CHECK_RADIUS)
+        long currentPigZombieCount = spawnerLocation.getWorld().getEntities()
                 .stream()
                 .filter(entity -> entity instanceof PigZombie)
                 .filter(entity -> entity.hasMetadata(meta))
+                .filter(entity -> entity.getMetadata(meta).get(0).asString().equals(game.getName() + ":" + spawnerLocation))
                 .filter(entity -> !entity.isDead())
                 .count();
 
@@ -58,7 +66,7 @@ public class PigZombieSpawnerTask extends BukkitRunnable {
         pigZombie.getEquipment().setItemInHandDropChance(1.0f); // 主手物品100%掉落
         pigZombie.setCustomNameVisible(false);
         pigZombie.setRemoveWhenFarAway(false);
-        pigZombie.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), game.getName()));
+        pigZombie.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + ":" + spawnerLocation));
     }
 
 
