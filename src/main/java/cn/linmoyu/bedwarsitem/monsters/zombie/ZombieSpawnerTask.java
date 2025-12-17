@@ -19,12 +19,6 @@ public class ZombieSpawnerTask extends BukkitRunnable {
     private static final int DESIRED_ZOMBIE_COUNT = 2;
     // 半径检测范围
     private static final double CHECK_RADIUS = 10;
-    // 此任务持续时长
-    private static final int TASK_DURATION_SECONDS = 180;
-    // 任务执行间隔 (秒)
-    private static final int TASK_INTERVAL_SECONDS = 30; // 30秒是瞎给的 没有测过具体数值
-    // 已执行秒数
-    private int elapsedSeconds = 0;
 
     public ZombieSpawnerTask(Game game, Location spawnerLocation) {
         this.game = game;
@@ -33,7 +27,7 @@ public class ZombieSpawnerTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        if (elapsedSeconds >= TASK_DURATION_SECONDS) {
+        if (game.isOverSet()) {
             this.cancel();
 //            removeRemainingZombies();
             return;
@@ -52,8 +46,6 @@ public class ZombieSpawnerTask extends BukkitRunnable {
                 spawnZombie();
             }
         }
-
-        elapsedSeconds += TASK_INTERVAL_SECONDS;
     }
 
     private void spawnZombie() {

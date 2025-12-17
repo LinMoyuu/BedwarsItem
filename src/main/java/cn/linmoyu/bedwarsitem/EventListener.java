@@ -57,18 +57,21 @@ public class EventListener implements Listener {
         }
     }
 
-    // 不掉落经验 和非鸡蛋之类的掉落物
+    // 不掉落经验 和指定物品之外的掉落物
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
         Entity entity = event.getEntity();
         if (MonsterUtils.isGameMonsters(entity)) {
             event.setDroppedExp(0);
-            event.getDrops().removeIf(itemStack -> itemStack.getType() != Material.EGG);
+            event.getDrops().removeIf(itemStack ->
+                    itemStack.getType() != Material.EGG &&
+                            itemStack.getType() != Material.OBSIDIAN
+            );
         }
     }
 
-    // 攻击指定玩家时取消攻击
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    // 怪物攻击指定玩家时取消攻击
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onMonsterAttack(EntityDamageByEntityEvent event) {
         Entity damager = event.getDamager();
         EntityType entityType = damager.getType();
@@ -129,7 +132,7 @@ public class EventListener implements Listener {
             }
         }
         Player killer = event.getEntity().getKiller();
-        Player thrower = MonsterUtils.getThrower(entity, MonsterUtils.getMonsterMeta(entityType));
+        Player thrower = MonsterUtils.getThrower(entity, monsterMeta);
         String deathMessage = entity.getCustomName() + "§f" + deathCause;
         if (killer != null) {
             deathMessage = entity.getCustomName() + "§f" + killer.getDisplayName() + deathCause;
@@ -137,7 +140,7 @@ public class EventListener implements Listener {
         if (thrower == null) {
             return;
         }
-        Game game = BedwarsRel.getInstance().getGameManager().getGame(MonsterUtils.getGameName(entity, MonsterUtils.getMonsterMeta(entityType)));
+        Game game = BedwarsRel.getInstance().getGameManager().getGame(MonsterUtils.getGameName(entity, monsterMeta));
         if (game != null) {
             for (Player player : game.getPlayers()) {
                 player.sendMessage(deathMessage);

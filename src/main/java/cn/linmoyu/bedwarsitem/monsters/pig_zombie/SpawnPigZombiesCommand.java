@@ -22,11 +22,11 @@ public class SpawnPigZombiesCommand implements CommandExecutor {
             return true;
         }
         for (ResourceSpawner spawner : game.getResourceSpawners()) {
-            // 检查这个刷新点是否产出金锭(第二岛屿)
-            boolean isGoldSpawner = spawner.getResources().stream()
-                    .anyMatch(itemStack -> itemStack.getType() == Material.GOLD_INGOT);
+            // 检查这个刷新点是否产出钻石(钻石岛屿)
+            boolean isDiamondSpawner = spawner.getResources().stream()
+                    .anyMatch(itemStack -> itemStack.getType() == Material.DIAMOND);
 
-            if (isGoldSpawner) {
+            if (isDiamondSpawner) {
                 // 为每个金锭刷新点启动一个生成任务
                 new PigZombieSpawnerTask(game, spawner.getLocation()).runTaskTimer(BedwarsItem.getInstance(), 0L, 300L);
             }

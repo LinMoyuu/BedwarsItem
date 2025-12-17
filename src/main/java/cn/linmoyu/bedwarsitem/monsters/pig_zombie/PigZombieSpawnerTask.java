@@ -19,12 +19,6 @@ public class PigZombieSpawnerTask extends BukkitRunnable {
     private static final int DESIRED_PIG_ZOMBIE_COUNT = 2;
     // 半径检测范围
     private static final double CHECK_RADIUS = 10;
-    // 此任务持续时长
-    private static final int TASK_DURATION_SECONDS = 180;
-    // 任务执行间隔 (秒)
-    private static final int TASK_INTERVAL_SECONDS = 30; // 30秒是瞎给的 没有测过具体数值
-    // 已执行秒数
-    private int elapsedSeconds = 0;
 
     public PigZombieSpawnerTask(Game game, Location spawnerLocation) {
         this.game = game;
@@ -33,7 +27,7 @@ public class PigZombieSpawnerTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        if (elapsedSeconds >= TASK_DURATION_SECONDS) {
+        if (game.isOverSet()) {
             this.cancel();
 //            removeRemainingZombies();
             return;
@@ -52,8 +46,6 @@ public class PigZombieSpawnerTask extends BukkitRunnable {
                 spawnPigZombie();
             }
         }
-
-        elapsedSeconds += TASK_INTERVAL_SECONDS;
     }
 
     private void spawnPigZombie() {
@@ -62,9 +54,7 @@ public class PigZombieSpawnerTask extends BukkitRunnable {
                 EntityType.PIG_ZOMBIE
         );
 
-        pigZombie.getEquipment().setHelmet(new ItemStack(Material.LEATHER_HELMET));
-        pigZombie.getEquipment().setItemInHand(new ItemStack(Material.EGG, 8));
-        pigZombie.getEquipment().setHelmetDropChance(0.0f); // 头盔不掉落
+        pigZombie.getEquipment().setItemInHand(new ItemStack(Material.OBSIDIAN, 2));
         pigZombie.getEquipment().setItemInHandDropChance(1.0f); // 主手物品100%掉落
         pigZombie.setCustomNameVisible(false);
         pigZombie.setRemoveWhenFarAway(false);
