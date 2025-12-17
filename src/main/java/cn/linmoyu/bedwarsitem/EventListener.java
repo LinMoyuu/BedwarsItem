@@ -17,6 +17,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.projectiles.ProjectileSource;
 
 public class EventListener implements Listener {
 
@@ -50,9 +51,24 @@ public class EventListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
         Entity entity = event.getEntity();
-        if (MonsterUtils.isGameMonsters(entity) && (event.getDamager() instanceof Player
-                || event.getDamager() instanceof Egg || event.getDamager() instanceof EntityFishingHook
-                || event.getDamager() instanceof Fireball || event.getDamager() instanceof TNTPrimed)) {
+        Entity damager = event.getDamager();
+
+        if (!MonsterUtils.isGameMonsters(entity)) return;
+        if (damager instanceof Arrow) {
+            Arrow arrow = (Arrow) damager;
+            ProjectileSource shooter = arrow.getShooter();
+
+            if (shooter instanceof Skeleton) {
+                return;
+            }
+        }
+
+        if (damager instanceof Player
+                || damager instanceof Egg
+                || damager instanceof EntityFishingHook
+                || damager instanceof Fireball
+                || damager instanceof TNTPrimed
+                || damager instanceof Arrow) {
             event.setCancelled(false);
         }
     }
