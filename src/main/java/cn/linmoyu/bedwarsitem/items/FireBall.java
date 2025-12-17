@@ -77,6 +77,6 @@ public class FireBall implements Listener {
         if (game.getState() != GameState.RUNNING) {
             return;
         }
-        e.setDamage(3);
+        e.setDamage(4);
     }
 }
