@@ -34,20 +34,7 @@ public class EventListener implements Listener {
 //        }
     }
 
-    // https://github.com/BedwarsRel/BedwarsRel/blob/master/common/src/main/java/io/github/bedwarsrel/listener/PlayerListener.java#L83-L88
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onInteract(PlayerInteractEvent event) {
-        ItemStack handItem = event.getItem();
-        if (handItem == null || (handItem.getType() != Material.MONSTER_EGG && handItem.getType() != Material.MONSTER_EGGS)) {
-            return;
-        }
-        if (handItem.getDurability() != 97) {
-            return;
-        }
-        event.setCancelled(false);
-    }
-
-    // 默认打不了生物 不知道为什么 懒得排查 Rel里也没搜到
+    // 默认打不了生物
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
         Entity entity = event.getEntity();
