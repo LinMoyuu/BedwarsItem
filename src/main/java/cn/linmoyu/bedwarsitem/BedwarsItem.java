@@ -2,12 +2,7 @@ package cn.linmoyu.bedwarsitem;
 
 import cn.linmoyu.bedwarsitem.items.FireBall;
 import cn.linmoyu.bedwarsitem.items.TNT;
-import cn.linmoyu.bedwarsitem.monsters.SilverFishSpawner;
-import cn.linmoyu.bedwarsitem.monsters.SkeletonSpawner;
-import cn.linmoyu.bedwarsitem.monsters.SpiderSpawner;
-import cn.linmoyu.bedwarsitem.monsters.WolfSpawner;
-import cn.linmoyu.bedwarsitem.monsters.pig_zombie.SpawnPigZombiesCommand;
-import cn.linmoyu.bedwarsitem.monsters.zombie.SpawnZombiesCommand;
+import cn.linmoyu.bedwarsitem.monsters.*;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;

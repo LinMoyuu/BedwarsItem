@@ -1,11 +1,6 @@
 package cn.linmoyu.bedwarsitem.utils;
 
-import cn.linmoyu.bedwarsitem.monsters.SilverFishSpawner;
-import cn.linmoyu.bedwarsitem.monsters.SkeletonSpawner;
-import cn.linmoyu.bedwarsitem.monsters.SpiderSpawner;
-import cn.linmoyu.bedwarsitem.monsters.WolfSpawner;
-import cn.linmoyu.bedwarsitem.monsters.pig_zombie.PigZombieSpawnerTask;
-import cn.linmoyu.bedwarsitem.monsters.zombie.ZombieSpawnerTask;
+import cn.linmoyu.bedwarsitem.monsters.*;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.game.Team;
@@ -77,10 +72,10 @@ public class MonsterUtils {
 
     public static boolean isGameMonsters(Entity entity) {
         EntityType entityType = entity.getType();
-        if (entityType == EntityType.ZOMBIE && entity.hasMetadata(ZombieSpawnerTask.meta)) {
+        if (entityType == EntityType.ZOMBIE && entity.hasMetadata(SpawnZombiesCommand.meta)) {
             return true;
         }
-        if (entityType == EntityType.PIG_ZOMBIE && entity.hasMetadata(PigZombieSpawnerTask.meta)) {
+        if (entityType == EntityType.PIG_ZOMBIE && entity.hasMetadata(SpawnPigZombiesCommand.meta)) {
             return true;
         }
         if (entityType == EntityType.SILVERFISH && entity.hasMetadata(SilverFishSpawner.meta)) {
@@ -99,10 +94,10 @@ public class MonsterUtils {
         String meta = "";
         switch (entityType) {
             case ZOMBIE:
-                meta = ZombieSpawnerTask.meta;
+                meta = SpawnZombiesCommand.meta;
                 break;
             case PIG_ZOMBIE:
-                meta = PigZombieSpawnerTask.meta;
+                meta = SpawnPigZombiesCommand.meta;
                 break;
             case SILVERFISH:
                 meta = SilverFishSpawner.meta;
