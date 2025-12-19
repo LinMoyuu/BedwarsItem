@@ -7,6 +7,7 @@ import io.github.bedwarsrel.game.Team;
 import net.minecraft.server.v1_8_R3.EntityFishingHook;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftFish;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,8 +16,6 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
 
 public class EventListener implements Listener {
@@ -53,6 +52,7 @@ public class EventListener implements Listener {
         if (damager instanceof Player
                 || damager instanceof Egg
                 || damager instanceof EntityFishingHook
+                || damager instanceof CraftFish
                 || damager instanceof Fireball
                 || damager instanceof TNTPrimed
                 || damager instanceof Arrow) {
