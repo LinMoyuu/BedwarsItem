@@ -22,8 +22,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class SkeletonSpawner implements Listener {
 
-    public static String meta = "BwSkeleton";
-
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInteract(PlayerInteractEvent event) {
         Player thrower = event.getPlayer();
@@ -54,6 +52,7 @@ public class SkeletonSpawner implements Listener {
     }
 
     private void spawnSkeleton(Game game, Location location, Player thrower) {
+        String meta = Monsters.PETS_SKELETON.getMeta();
         // 生成蠹虫
         Skeleton skeleton = (Skeleton) location.getWorld().spawnEntity(location, EntityType.SKELETON);
         skeleton.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + ":" + thrower.getName()));

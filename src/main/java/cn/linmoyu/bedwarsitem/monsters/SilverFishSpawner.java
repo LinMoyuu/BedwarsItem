@@ -24,8 +24,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class SilverFishSpawner implements Listener {
 
-    public static String meta = "BwSilverFish";
-
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInteract(PlayerInteractEvent event) {
         Player thrower = event.getPlayer();
@@ -56,6 +54,7 @@ public class SilverFishSpawner implements Listener {
     }
 
     private void spawnSilverfish(Game game, Location location, Player thrower) {
+        String meta = Monsters.PETS_SILVERFISH.getMeta();
         // 生成蠹虫
         Silverfish silverfish = (Silverfish) location.getWorld().spawnEntity(location, EntityType.SILVERFISH);
         silverfish.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + ":" + thrower.getName()));
@@ -109,7 +108,7 @@ public class SilverFishSpawner implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onSilverfishChangeBlock(EntityChangeBlockEvent event) {
         Entity entity = event.getEntity();
-        if (entity.getType() == EntityType.SILVERFISH && entity.hasMetadata(SilverFishSpawner.meta)) {
+        if (entity.getType() == EntityType.SILVERFISH && entity.hasMetadata(Monsters.PETS_SILVERFISH.getMeta())) {
             event.setCancelled(true);
         }
     }

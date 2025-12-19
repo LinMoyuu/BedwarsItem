@@ -1,6 +1,6 @@
 package cn.linmoyu.bedwarsitem.utils;
 
-import cn.linmoyu.bedwarsitem.monsters.*;
+import cn.linmoyu.bedwarsitem.monsters.Monsters;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.game.Team;
@@ -72,49 +72,21 @@ public class MonsterUtils {
 
     public static boolean isGameMonsters(Entity entity) {
         EntityType entityType = entity.getType();
-        if (entityType == EntityType.ZOMBIE && entity.hasMetadata(SpawnZombiesCommand.meta)) {
-            return true;
+        for (Monsters monster : Monsters.values()) {
+            if (monster.getEntityType() == entityType && entity.hasMetadata(monster.getMeta())) {
+                return true;
+            }
         }
-        if (entityType == EntityType.PIG_ZOMBIE && entity.hasMetadata(SpawnPigZombiesCommand.meta)) {
-            return true;
-        }
-        if (entityType == EntityType.SILVERFISH && entity.hasMetadata(SilverFishSpawner.meta)) {
-            return true;
-        }
-        if (entityType == EntityType.SPIDER && entity.hasMetadata(SpiderSpawner.meta)) {
-            return true;
-        }
-        if (entityType == EntityType.WOLF && entity.hasMetadata(WolfSpawner.meta)) {
-            return true;
-        }
-        return entityType == EntityType.SKELETON && entity.hasMetadata(SkeletonSpawner.meta);
+        return false;
     }
 
     public static String getMonsterMeta(EntityType entityType) {
-        String meta = "";
-        switch (entityType) {
-            case ZOMBIE:
-                meta = SpawnZombiesCommand.meta;
-                break;
-            case PIG_ZOMBIE:
-                meta = SpawnPigZombiesCommand.meta;
-                break;
-            case SILVERFISH:
-                meta = SilverFishSpawner.meta;
-                break;
-            case SKELETON:
-                meta = SkeletonSpawner.meta;
-                break;
-            case SPIDER:
-                meta = SpiderSpawner.meta;
-                break;
-            case WOLF:
-                meta = WolfSpawner.meta;
-                break;
-            default:
-                break;
+        for (Monsters monster : Monsters.values()) {
+            if (monster.getEntityType() == entityType) {
+                return monster.getMeta();
+            }
         }
-        return meta;
+        return "";
     }
 
     public static String getGameName(Entity entity, String meta) {

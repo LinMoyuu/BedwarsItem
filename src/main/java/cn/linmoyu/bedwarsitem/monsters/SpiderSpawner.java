@@ -22,8 +22,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class SpiderSpawner implements Listener {
 
-    public static String meta = "BwSpider";
-
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInteract(PlayerInteractEvent event) {
         Player thrower = event.getPlayer();
@@ -54,6 +52,7 @@ public class SpiderSpawner implements Listener {
     }
 
     private void spawnSpider(Game game, Location location, Player thrower) {
+        String meta = Monsters.PETS_SPIDER.getMeta();
         Spider spider = (Spider) location.getWorld().spawnEntity(location, EntityType.SPIDER);
         spider.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + ":" + thrower.getName()));
 

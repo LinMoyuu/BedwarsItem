@@ -16,7 +16,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 
 public class SpawnZombiesCommand implements CommandExecutor {
-    public static String meta = "BwZombie";
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -33,11 +32,11 @@ public class SpawnZombiesCommand implements CommandExecutor {
                     .anyMatch(itemStack -> itemStack.getType() == Material.GOLD_INGOT);
 
             if (isGoldSpawner) {
-                for (int i = 0; i < 2; i++) {
+                // 生成数量
+                int spawnCount = 2;
+                for (int i = 0; i < spawnCount; i++) {
                     spawnZombie(spawner.getLocation(), game);
                 }
-                // 为每个金锭刷新点启动一个生成任务
-//                new ZombieSpawnerTask(game, spawner.getLocation()).runTaskTimer(BedwarsItem.getInstance(), 0L, 300L);
             }
         }
         return true;
@@ -55,6 +54,6 @@ public class SpawnZombiesCommand implements CommandExecutor {
         zombie.getEquipment().setItemInHandDropChance(1.0f); // 主手物品100%掉落
         zombie.setCustomNameVisible(false);
         zombie.setRemoveWhenFarAway(false);
-        zombie.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + ":" + spawnerLocation));
+        zombie.setMetadata(Monsters.GOLD_ZOMBIE.getMeta(), new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + ":" + spawnerLocation));
     }
 }

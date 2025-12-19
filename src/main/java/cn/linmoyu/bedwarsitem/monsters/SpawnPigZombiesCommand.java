@@ -17,8 +17,6 @@ import org.bukkit.metadata.FixedMetadataValue;
 
 public class SpawnPigZombiesCommand implements CommandExecutor {
 
-    public static String meta = "BwPigZombie";
-
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (sender instanceof Player) return true;
@@ -34,11 +32,11 @@ public class SpawnPigZombiesCommand implements CommandExecutor {
                     .anyMatch(itemStack -> itemStack.getType() == Material.DIAMOND);
 
             if (isDiamondSpawner) {
-                for (int i = 0; i < 1; i++) {
+                // 生成数量
+                int spawnCount = 1;
+                for (int i = 0; i < spawnCount; i++) {
                     spawnPigZombie(spawner.getLocation(), game);
                 }
-                // 为每个金锭刷新点启动一个生成任务
-//                new PigZombieSpawnerTask(game, spawner.getLocation()).runTaskTimer(BedwarsItem.getInstance(), 0L, 300L);
             }
         }
         return true;
@@ -54,6 +52,6 @@ public class SpawnPigZombiesCommand implements CommandExecutor {
         pigZombie.getEquipment().setItemInHandDropChance(1.0f); // 主手物品100%掉落
         pigZombie.setCustomNameVisible(false);
         pigZombie.setRemoveWhenFarAway(false);
-        pigZombie.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + ":" + spawnerLocation));
+        pigZombie.setMetadata(Monsters.DIAMOND_PIG_ZOMBIE.getMeta(), new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + ":" + spawnerLocation));
     }
 }

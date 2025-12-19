@@ -22,8 +22,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class WolfSpawner implements Listener {
 
-    public static String meta = "BwWolf";
-
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInteract(PlayerInteractEvent event) {
         Player thrower = event.getPlayer();
@@ -54,6 +52,7 @@ public class WolfSpawner implements Listener {
     }
 
     private void spawnWolf(Game game, Location location, Player thrower) {
+        String meta = Monsters.PETS_WOLF.getMeta();
         Wolf wolf = (Wolf) location.getWorld().spawnEntity(location, EntityType.WOLF);
         wolf.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + ":" + thrower.getName()));
 
