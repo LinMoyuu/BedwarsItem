@@ -66,10 +66,6 @@ public class EventListener implements Listener {
         Entity entity = event.getEntity();
         if (MonsterUtils.isGameMonsters(entity)) {
             event.setDroppedExp(0);
-            event.getDrops().removeIf(itemStack ->
-                    itemStack.getType() != Material.EGG &&
-                            itemStack.getType() != Material.OBSIDIAN
-            );
         }
     }
 
