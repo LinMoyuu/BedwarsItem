@@ -19,7 +19,9 @@
 
 > 本项目有许多直接复制粘贴的引用。仅经过部分修改，来源如下：
 
+- [BridgeEgg.java](https://github.com/TheRamU/BedwarsItemAddon/blob/main/src/main/java/me/ram/bedwarsitemaddon/items/BridgeEgg.java)
 - [FireBall.java](https://github.com/TheRamU/BedwarsItemAddon/blob/main/src/main/java/me/ram/bedwarsitemaddon/items/FireBall.java)
 - [LightTNT.java](https://github.com/TheRamU/BedwarsItemAddon/blob/main/src/main/java/me/ram/bedwarsitemaddon/items/LightTNT.java)
+- [LocationUtil.java](https://github.com/TheRamU/BedwarsItemAddon/blob/main/src/main/java/me/ram/bedwarsitemaddon/utils/LocationUtil.java)
 - [NoAIUtils.java](https://github.com/SakuraKoi/BridgingAnalyzer/blob/master/src/sakura/kooi/BridgingAnalyzer/utils/NoAIUtils.java)
 
