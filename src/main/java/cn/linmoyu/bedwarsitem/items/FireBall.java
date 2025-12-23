@@ -38,7 +38,7 @@ public class FireBall implements Listener {
         if (game == null || game.getState() != GameState.RUNNING || game.isOverSet()) {
             return;
         }
-        if (game.isSpectator(player) || !game.getPlayers().contains(player)) {
+        if (game.isSpectator(player)) {
             return;
         }
 

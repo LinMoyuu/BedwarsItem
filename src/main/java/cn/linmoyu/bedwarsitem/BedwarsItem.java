@@ -1,6 +1,7 @@
 package cn.linmoyu.bedwarsitem;
 
 import cn.linmoyu.bedwarsitem.items.BridgeEgg;
+import cn.linmoyu.bedwarsitem.items.ExplosionProof;
 import cn.linmoyu.bedwarsitem.items.FireBall;
 import cn.linmoyu.bedwarsitem.items.TNT;
 import cn.linmoyu.bedwarsitem.monsters.*;
@@ -20,6 +21,7 @@ public final class BedwarsItem extends JavaPlugin implements Listener {
         instance = this;
         Bukkit.getPluginManager().registerEvents(new EventListener(), this);
         Bukkit.getPluginManager().registerEvents(new BridgeEgg(), this);
+        Bukkit.getPluginManager().registerEvents(new ExplosionProof(), this);
         Bukkit.getPluginManager().registerEvents(new FireBall(), this);
         Bukkit.getPluginManager().registerEvents(new TNT(), this);
 
