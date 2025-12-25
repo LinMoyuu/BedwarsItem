@@ -31,12 +31,7 @@ public class ExplosionProof implements Listener {
     @EventHandler
     public void onExplode(EntityExplodeEvent e) {
         Location location = e.getEntity().getLocation().getBlock().getLocation().add(0.5, 0.5, 0.5);
-        Game game = null;
-        for (Game g : BedwarsRel.getInstance().getGameManager().getGames()) {
-            if (g.getState() == GameState.RUNNING && g.getRegion().isInRegion(location)) {
-                game = g;
-            }
-        }
+        Game game = BedwarsRel.getInstance().getGameManager().getGameByLocation(location);
         if (game == null) {
             return;
         }
