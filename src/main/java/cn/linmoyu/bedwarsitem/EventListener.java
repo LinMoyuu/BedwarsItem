@@ -3,6 +3,7 @@ package cn.linmoyu.bedwarsitem;
 import cn.linmoyu.bedwarsitem.utils.MonsterUtils;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
+import io.github.bedwarsrel.game.GameState;
 import io.github.bedwarsrel.game.Team;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Entity;
@@ -54,17 +55,18 @@ public class EventListener implements Listener {
             return;
         }
 
-        if (attackerOwner.equals(victimOwner)) {
-            event.setCancelled(true);
-            return;
-        }
-
         Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(attackerOwner);
         if (game == null) {
             game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(victimOwner);
             if (game == null) {
                 return;
             }
+        }
+        if (game.getState() != GameState.RUNNING) return;
+
+        if (attackerOwner.equals(victimOwner)) {
+            event.setCancelled(true);
+            return;
         }
 
         if ((victim instanceof Player && (game.isSpectator((Player) victim) || ((Player) victim).getGameMode() == GameMode.SPECTATOR)) ||
