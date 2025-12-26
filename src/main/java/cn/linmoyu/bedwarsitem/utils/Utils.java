@@ -5,6 +5,7 @@ import io.github.bedwarsrel.game.ResourceSpawner;
 import io.github.bedwarsrel.game.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -53,5 +54,17 @@ public class Utils {
             }
         }
         return true;
+    }
+
+    public static Sound getSound(String modernSound, String legacySound) {
+        try {
+            return Sound.valueOf(modernSound);
+        } catch (IllegalArgumentException e) {
+            try {
+                return Sound.valueOf(legacySound);
+            } catch (IllegalArgumentException ex) {
+                return null;
+            }
+        }
     }
 }

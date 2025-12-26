@@ -64,6 +64,7 @@ public class BridgeEgg implements Listener {
     }
 
     public void setblock(Game game, Egg egg, Player player) {
+        Sound sound = Utils.getSound("ENTITY_PLAYER_LEVELUP", "DIG_STONE");
         new BukkitRunnable() {
             int i = 0;
 
@@ -111,7 +112,7 @@ public class BridgeEgg implements Listener {
                                     loc.getBlock().setType(Material.SANDSTONE);
                                     i++;
                                     game.getRegion().addPlacedBlock(loc.getBlock(), null);
-                                    player.playSound(player.getLocation(), Sound.DIG_STONE,1,1);
+                                    if (sound != null) player.playSound(player.getLocation(), sound, 1.0f, 1.0f);
                                 }
                             }
                         }
