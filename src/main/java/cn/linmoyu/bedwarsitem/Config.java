@@ -31,8 +31,8 @@ public class Config {
 
         FileConfiguration config = plugin.getConfig();
         debug = config.getBoolean("debug");
-        spawner_zombies_count = config.getInt("res_spawner.zombies.count");
-        spawner_pigzombies_count = config.getInt("res_spawner.pigzombies.count");
+        spawner_zombies_count = config.getInt("res_spawner.zombies");
+        spawner_pigzombies_count = config.getInt("res_spawner.pigzombies");
         explosion_proof_enabled = config.getBoolean("explosion_proof.enabled");
         bridge_egg_enabled = config.getBoolean("bridge_egg.enabled");
         bridge_egg_name = config.getString("bridge_egg.name");
