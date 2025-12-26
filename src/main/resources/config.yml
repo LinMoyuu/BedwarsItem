@@ -30,4 +30,4 @@ spawner:
   silverfish: true
   skeleton: true
   spider: true
-  wolfspawner: true
+  wolf: true
