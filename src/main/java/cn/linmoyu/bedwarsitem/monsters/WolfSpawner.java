@@ -61,6 +61,8 @@ public class WolfSpawner implements Listener {
         // 设置自定义属性
         wolf.setCustomName("§a§l[" + thrower.getDisplayName() + "§a§l] §b§l的宠物");
         wolf.setRemoveWhenFarAway(false);
+        wolf.setOwner(thrower);
+        wolf.setTamed(true);
 
         new BukkitRunnable() {
             @Override
