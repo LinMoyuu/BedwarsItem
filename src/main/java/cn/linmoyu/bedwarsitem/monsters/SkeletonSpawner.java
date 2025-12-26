@@ -55,17 +55,28 @@ public class SkeletonSpawner implements Listener {
 
     private void spawnSkeleton(Game game, Location location, Player thrower) {
         String meta = Monsters.PETS_SKELETON.getMeta();
-        // 生成蠹虫
         Skeleton skeleton = (Skeleton) location.getWorld().spawnEntity(location, EntityType.SKELETON);
         skeleton.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + ":" + thrower.getName()));
-        skeleton.getEquipment().setHelmet(new ItemStack(Material.LEATHER_HELMET));
-        skeleton.getEquipment().setHelmetDropChance(0.0f); // 头盔不掉落
         skeleton.getEquipment().setItemInHandDropChance(0.0f); // 不掉落
 
         // 设置自定义属性
         skeleton.setCustomName("§a§l[" + thrower.getDisplayName() + "§a§l] §b§l的宠物");
         skeleton.setRemoveWhenFarAway(false);
+        skeleton.setFireTicks(0);
 
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                Player thrower = MonsterUtils.getThrower(skeleton, meta);
+                if (skeleton.isDead() || !skeleton.isValid() || thrower == null || !thrower.isOnline()) {
+                    skeleton.remove();
+                    this.cancel();
+                    return;
+                }
+
+                skeleton.setFireTicks(0);
+            }
+        }.runTaskTimer(BedwarsItem.getInstance(), 0L, 0L);
         // 在10秒后没跟过来自动传送
         new BukkitRunnable() {
             @Override
@@ -95,7 +106,7 @@ public class SkeletonSpawner implements Listener {
                 }
 
                 Player target = MonsterUtils.findNearestEnemy(skeleton, thrower);
-                // 设置蠹虫目标
+                // 设置目标
                 skeleton.setTarget(target);
 //                if (target == null) {
 //                    NoAIUtils.setAI(skeleton, false);
