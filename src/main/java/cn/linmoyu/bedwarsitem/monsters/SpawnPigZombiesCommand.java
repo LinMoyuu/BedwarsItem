@@ -43,12 +43,12 @@ public class SpawnPigZombiesCommand implements CommandExecutor, TabCompleter {
                 for (int i = 0; i < spawnCount; i++) {
                     spawnPigZombie(spawner.getLocation(), game);
                     if (Config.debug) {
-                        sender.sendMessage("§e[DEBUG] 在游戏 " + gameName + " 的金锭刷新点 " + spawner.getLocation() + " 生成了一个猪人.");
+                        sender.sendMessage("§e[DEBUG] 在游戏 " + gameName + " 的钻石刷新点 " + spawner.getLocation() + " 生成了一个猪人.");
                     }
                 }
             }
         }
-        sender.sendMessage("§a已在游戏 " + gameName + " 的所有金锭刷新点生成僵尸.");
+        sender.sendMessage("§a已在游戏 " + gameName + " 的所有钻石刷新点生成猪人.");
         return true;
     }
 

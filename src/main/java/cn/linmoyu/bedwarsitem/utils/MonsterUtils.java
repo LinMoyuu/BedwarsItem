@@ -8,10 +8,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
+import org.bukkit.projectiles.ProjectileSource;
 
 public class MonsterUtils {
 
@@ -105,5 +103,32 @@ public class MonsterUtils {
         if (metas.length < 2) return null;
         throwerName = metas[1];
         return Bukkit.getPlayerExact(throwerName);
+    }
+
+    public static Player getPlayer(Entity entity) {
+        if (entity instanceof Player) {
+            return (Player) entity;
+        }
+
+        if (entity instanceof Projectile) {
+            ProjectileSource shooter = ((Projectile) entity).getShooter();
+            if (shooter instanceof Entity) {
+                return getPlayer((Entity) shooter);
+            }
+        }
+
+        if (entity instanceof TNTPrimed) {
+            Entity source = ((TNTPrimed) entity).getSource();
+            if (source != null) {
+                return getPlayer(source);
+            }
+        }
+
+        if (MonsterUtils.isGameMonsters(entity)) {
+            String monsterMeta = MonsterUtils.getMonsterMeta(entity.getType());
+            return MonsterUtils.getThrower(entity, monsterMeta);
+        }
+
+        return null;
     }
 }

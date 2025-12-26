@@ -57,7 +57,6 @@ public class SilverFishSpawner implements Listener {
 
     private void spawnSilverfish(Game game, Location location, Player thrower) {
         String meta = Monsters.PETS_SILVERFISH.getMeta();
-        // 生成蠹虫
         Silverfish silverfish = (Silverfish) location.getWorld().spawnEntity(location, EntityType.SILVERFISH);
         silverfish.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + ":" + thrower.getName()));
 
@@ -95,7 +94,7 @@ public class SilverFishSpawner implements Listener {
                 }
 
                 Player target = MonsterUtils.findNearestEnemy(silverfish, thrower);
-                // 设置蠹虫目标
+                // 设置目标
                 silverfish.setTarget(target);
 //                if (target == null) {
 //                    NoAIUtils.setAI(silverfish, false);
