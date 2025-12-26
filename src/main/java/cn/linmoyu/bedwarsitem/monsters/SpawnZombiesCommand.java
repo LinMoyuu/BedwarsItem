@@ -10,12 +10,18 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 
-public class SpawnZombiesCommand implements CommandExecutor {
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class SpawnZombiesCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -59,5 +65,26 @@ public class SpawnZombiesCommand implements CommandExecutor {
         zombie.setCustomNameVisible(false);
         zombie.setRemoveWhenFarAway(false);
         zombie.setMetadata(Monsters.GOLD_ZOMBIE.getMeta(), new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + ":" + spawnerLocation));
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+        List<String> suggestions = getSuggest(sender, args);
+        String input = args.length > 0 ? args[args.length - 1].toUpperCase() : "";
+
+        return suggestions.stream()
+                .filter(s -> s.startsWith(input))
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    private List<String> getSuggest(CommandSender sender, String[] args) {
+        List<String> games = new ArrayList<>();
+        BedwarsRel.getInstance().getGameManager().getGames().forEach(game -> {
+            games.add(game.getName());
+        });
+        if (args.length == 1) {
+            return games;
+        }
+        return Collections.emptyList();
     }
 }
