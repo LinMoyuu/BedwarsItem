@@ -1,12 +1,14 @@
 package cn.linmoyu.bedwarsitem.items;
 
 import cn.linmoyu.bedwarsitem.BedwarsItem;
+import cn.linmoyu.bedwarsitem.Config;
 import cn.linmoyu.bedwarsitem.utils.LocationUtil;
 import cn.linmoyu.bedwarsitem.utils.TakeItemUtil;
 import cn.linmoyu.bedwarsitem.utils.Utils;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.game.GameState;
+import me.ram.bedwarsscoreboardaddon.utils.ColorUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -18,6 +20,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -28,6 +31,7 @@ public class BridgeEgg implements Listener {
 
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
+        if (!Config.bridge_egg_enabled) return;
         Action action = e.getAction();
         if (action != Action.RIGHT_CLICK_BLOCK && action != Action.RIGHT_CLICK_AIR) {
             return;
@@ -35,6 +39,15 @@ public class BridgeEgg implements Listener {
         Player player = e.getPlayer();
         ItemStack handItem = e.getItem();
         if (handItem == null || handItem.getType() != Material.EGG) {
+            return;
+        }
+        ItemMeta itemMeta = handItem.getItemMeta();
+        if (itemMeta == null) {
+            return;
+        }
+        String displayName = itemMeta.hasDisplayName() ?
+                ColorUtil.removeColor(itemMeta.getDisplayName()) : "";
+        if (!(Config.bridge_egg_name.equals(displayName) || displayName.isEmpty() && Config.bridge_egg_name.isEmpty())) {
             return;
         }
         Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(player);
@@ -92,10 +105,9 @@ public class BridgeEgg implements Listener {
                                 blocklocation.add(LocationUtil.getLocation(location, -1, 0, 0));
                                 blocklocation.add(LocationUtil.getLocation(location, 0, 0, -1));
                             }
-                            int max_block = 50;
                             for (Location loc : blocklocation) {
                                 Block block = loc.getBlock();
-                                if (block.getType() == new ItemStack(Material.AIR).getType() && !block.equals(player.getLocation().getBlock()) && !block.equals(player.getLocation().clone().add(0, 1, 0).getBlock()) && game.getRegion().isInRegion(loc) && i < max_block) {
+                                if (block.getType() == new ItemStack(Material.AIR).getType() && !block.equals(player.getLocation().getBlock()) && !block.equals(player.getLocation().clone().add(0, 1, 0).getBlock()) && game.getRegion().isInRegion(loc) && i < Config.bridge_egg_max_blocks) {
                                     loc.getBlock().setType(Material.SANDSTONE);
                                     i++;
                                     game.getRegion().addPlacedBlock(loc.getBlock(), null);

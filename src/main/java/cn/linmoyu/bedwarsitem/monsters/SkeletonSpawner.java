@@ -1,6 +1,7 @@
 package cn.linmoyu.bedwarsitem.monsters;
 
 import cn.linmoyu.bedwarsitem.BedwarsItem;
+import cn.linmoyu.bedwarsitem.Config;
 import cn.linmoyu.bedwarsitem.utils.MonsterUtils;
 import cn.linmoyu.bedwarsitem.utils.TakeItemUtil;
 import io.github.bedwarsrel.BedwarsRel;
@@ -24,6 +25,7 @@ public class SkeletonSpawner implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInteract(PlayerInteractEvent event) {
+        if (!Config.skeleton_spawner_enabled) return;
         Player thrower = event.getPlayer();
         ItemStack handItem = event.getItem();
         if (handItem == null || (handItem.getType() != Material.MONSTER_EGG && handItem.getType() != Material.MONSTER_EGGS)) {

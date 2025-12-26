@@ -1,8 +1,8 @@
 package cn.linmoyu.bedwarsitem.items;
 
+import cn.linmoyu.bedwarsitem.Config;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
-import io.github.bedwarsrel.game.GameState;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -30,6 +30,7 @@ public class ExplosionProof implements Listener {
 
     @EventHandler
     public void onExplode(EntityExplodeEvent e) {
+        if (!Config.explosion_proof_enabled) return;
         Location location = e.getEntity().getLocation().getBlock().getLocation().add(0.5, 0.5, 0.5);
         Game game = BedwarsRel.getInstance().getGameManager().getGameByLocation(location);
         if (game == null) {

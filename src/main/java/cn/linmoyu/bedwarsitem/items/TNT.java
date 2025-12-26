@@ -1,6 +1,7 @@
 package cn.linmoyu.bedwarsitem.items;
 
 import cn.linmoyu.bedwarsitem.BedwarsItem;
+import cn.linmoyu.bedwarsitem.Config;
 import cn.linmoyu.bedwarsitem.utils.Utils;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
@@ -19,6 +20,7 @@ public class TNT implements Listener {
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent e) {
+        if (!Config.tnt_enable) return;
         Player player = e.getPlayer();
         if (e.getBlock().getType() != Material.TNT) {
             return;
@@ -35,9 +37,9 @@ public class TNT implements Listener {
 
         e.getBlock().setType(Material.AIR);
         TNTPrimed tnt = e.getBlock().getLocation().getWorld().spawn(e.getBlock().getLocation().add(0.5, 0, 0.5), TNTPrimed.class);
-        tnt.setYield(3);
+        tnt.setYield(Config.tnt_yield);
         tnt.setIsIncendiary(false);
-        tnt.setFuseTicks(40);
+        tnt.setFuseTicks(Config.tnt_fuse_ticks);
         tnt.setMetadata("LightTNT", new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + "." + player.getName()));
 
     }
@@ -60,6 +62,6 @@ public class TNT implements Listener {
         if (game.isSpectator(player) || !game.getPlayers().contains(player)) {
             return;
         }
-        e.setDamage(3);
+        e.setDamage(Config.tnt_damage);
     }
 }

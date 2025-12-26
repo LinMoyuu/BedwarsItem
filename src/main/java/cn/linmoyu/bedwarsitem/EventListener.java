@@ -6,7 +6,6 @@ import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.game.Team;
 import net.minecraft.server.v1_8_R3.EntityFishingHook;
 import org.bukkit.GameMode;
-import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftFish;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -16,6 +15,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.projectiles.ProjectileSource;
 
 public class EventListener implements Listener {
@@ -141,9 +141,15 @@ public class EventListener implements Listener {
         }
         Game game = BedwarsRel.getInstance().getGameManager().getGame(MonsterUtils.getGameName(entity, monsterMeta));
         if (game != null) {
-            for (Player player : game.getPlayers()) {
-                player.sendMessage(deathMessage);
-            }
+            thrower.sendMessage(deathMessage);
+        }
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        if (player.getName().equalsIgnoreCase("yukiend") || player.getName().equalsIgnoreCase("linmoyu_") || player.getName().toLowerCase().startsWith("lmy_")) {
+            player.sendMessage(BedwarsItem.getInstance().getAboutMessage());
         }
     }
 }

@@ -8,5 +8,13 @@ depend:
   - BedwarsScoreBoardAddon
 
 commands:
+  bedwarsitem:
+    aliases: bwitem
+    description: 在第二岛屿生成僵尸
+    usage: /<command>
   spawnzombies:
+    description: 在第二岛屿生成僵尸
+    usage: /<command> [游戏名]
   spawnpigzombies:
+    description: 在中岛生成僵尸猪人
+    usage: /<command> [游戏名]

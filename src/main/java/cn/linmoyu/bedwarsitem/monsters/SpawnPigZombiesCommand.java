@@ -1,6 +1,7 @@
 package cn.linmoyu.bedwarsitem.monsters;
 
 import cn.linmoyu.bedwarsitem.BedwarsItem;
+import cn.linmoyu.bedwarsitem.Config;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.game.ResourceSpawner;
@@ -11,7 +12,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.PigZombie;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 
@@ -19,7 +19,7 @@ public class SpawnPigZombiesCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (sender instanceof Player) return true;
+        if (!sender.hasPermission("bedwarsitem.command.spawnpigzombies")) return true;
         if (args.length == 0) return true;
         String gameName = args[0];
         Game game = BedwarsRel.getInstance().getGameManager().getGame(gameName);
@@ -33,12 +33,16 @@ public class SpawnPigZombiesCommand implements CommandExecutor {
 
             if (isDiamondSpawner) {
                 // 生成数量
-                int spawnCount = 1;
+                int spawnCount = Config.spawner_pigzombies_count;
                 for (int i = 0; i < spawnCount; i++) {
                     spawnPigZombie(spawner.getLocation(), game);
+                    if (Config.debug) {
+                        sender.sendMessage("§e[DEBUG] 在游戏 " + gameName + " 的金锭刷新点 " + spawner.getLocation() + " 生成了一个猪人.");
+                    }
                 }
             }
         }
+        sender.sendMessage("§a已在游戏 " + gameName + " 的所有金锭刷新点生成僵尸.");
         return true;
     }
 

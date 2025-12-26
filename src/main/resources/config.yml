@@ -1,0 +1,33 @@
+debug: false
+
+bridge_egg:
+  enabled: true
+  # 保留空即不判断名字，不要带颜色符号。
+  name: "搭桥蛋"
+  max_blocks: 50
+
+explosion_proof:
+  enabled: true
+
+fireball:
+  enabled: true
+  yield: 0.5
+  velocity: 7.0
+  damage: 4.0
+
+tnt:
+  enabled: true
+  yield: 3
+  fuse_ticks: 80
+  damage: 3.0
+
+# 生成点数量
+res_spawner:
+  zombies: 2
+  pigzombies: 1
+
+spawner:
+  silverfish: true
+  skeleton: true
+  spider: true
+  wolfspawner: true

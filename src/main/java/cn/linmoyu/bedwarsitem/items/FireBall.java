@@ -1,6 +1,7 @@
 package cn.linmoyu.bedwarsitem.items;
 
 import cn.linmoyu.bedwarsitem.BedwarsItem;
+import cn.linmoyu.bedwarsitem.Config;
 import cn.linmoyu.bedwarsitem.utils.TakeItemUtil;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
@@ -24,6 +25,9 @@ public class FireBall implements Listener {
 
     @EventHandler
     public void onInteractFireball(PlayerInteractEvent e) {
+        if (!Config.fireball_enabled) {
+            return;
+        }
         ItemStack handItem = e.getItem();
         if (handItem == null || handItem.getType() != Material.FIREBALL) {
             return;
@@ -45,8 +49,8 @@ public class FireBall implements Listener {
         Fireball fireball = player.launchProjectile(Fireball.class);
         fireball.setBounce(false);
         fireball.setShooter(player);
-        fireball.setYield((float) 0.5);
-        fireball.setVelocity(fireball.getDirection().multiply(7));
+        fireball.setYield(Config.fireball_yield);
+        fireball.setVelocity(fireball.getDirection().multiply(Config.fireball_velocity));
         fireball.setMetadata("FireBall", new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + "." + player.getName()));
         TakeItemUtil.TakeItem(player, handItem);
     }
@@ -77,6 +81,6 @@ public class FireBall implements Listener {
         if (game.getState() != GameState.RUNNING) {
             return;
         }
-        e.setDamage(4);
+        e.setDamage(Config.fireball_damage);
     }
 }
