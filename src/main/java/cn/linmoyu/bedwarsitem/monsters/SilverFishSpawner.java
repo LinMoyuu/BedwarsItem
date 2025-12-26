@@ -7,6 +7,7 @@ import cn.linmoyu.bedwarsitem.utils.TakeItemUtil;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.game.GameState;
+import me.ram.bedwarsscoreboardaddon.utils.BedwarsUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -73,6 +74,9 @@ public class SilverFishSpawner implements Listener {
                 if (silverfish.isDead() || !silverfish.isValid() || thrower == null || !thrower.isOnline()) {
                     silverfish.remove();
                     this.cancel();
+                    return;
+                }
+                if (BedwarsUtil.isRespawning(game, thrower)) {
                     return;
                 }
 
