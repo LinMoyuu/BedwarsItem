@@ -6,6 +6,7 @@ import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.game.GameState;
 import io.github.bedwarsrel.game.Team;
 import org.bukkit.GameMode;
+import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -42,6 +43,9 @@ public class EventListener implements Listener {
         if (MonsterUtils.isGameMonsters(victim) &&
                 (victimType == EntityType.ZOMBIE || victimType == EntityType.PIG_ZOMBIE)) {
             event.setCancelled(false);
+            return;
+        }
+        if (damager instanceof EnderPearl) {
             return;
         }
 
