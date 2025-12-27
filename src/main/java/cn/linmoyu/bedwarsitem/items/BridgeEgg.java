@@ -64,7 +64,7 @@ public class BridgeEgg implements Listener {
     }
 
     public void setblock(Game game, Egg egg, Player player) {
-        Sound sound = Utils.getSound("ENTITY_PLAYER_LEVELUP", "DIG_STONE");
+        Sound sound = Utils.getSound("BLOCK_STONE_BREAK", "DIG_STONE");
         new BukkitRunnable() {
             int i = 0;
 
@@ -77,10 +77,6 @@ public class BridgeEgg implements Listener {
                         @Override
                         public void run() {
                             if (game.isOverSet() || game.getState() != GameState.RUNNING) {
-                                this.cancel();
-                                return;
-                            }
-                            if (!Utils.isCanPlace(game, location)) {
                                 this.cancel();
                                 return;
                             }
@@ -108,7 +104,7 @@ public class BridgeEgg implements Listener {
                             }
                             for (Location loc : blocklocation) {
                                 Block block = loc.getBlock();
-                                if (block.getType() == new ItemStack(Material.AIR).getType() && !block.equals(player.getLocation().getBlock()) && !block.equals(player.getLocation().clone().add(0, 1, 0).getBlock()) && game.getRegion().isInRegion(loc) && i < Config.bridge_egg_max_blocks) {
+                                if (block.getType() == new ItemStack(Material.AIR).getType() && !block.equals(player.getLocation().getBlock()) && !block.equals(player.getLocation().clone().add(0, 1, 0).getBlock()) && game.getRegion().isInRegion(loc) && i < Config.bridge_egg_max_blocks && Utils.isCanPlace(game, location)) {
                                     loc.getBlock().setType(Material.SANDSTONE);
                                     i++;
                                     game.getRegion().addPlacedBlock(loc.getBlock(), null);
