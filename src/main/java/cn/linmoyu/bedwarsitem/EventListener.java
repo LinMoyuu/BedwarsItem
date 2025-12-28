@@ -90,6 +90,9 @@ public class EventListener implements Listener {
     public void onEntityDeath(EntityDeathEvent event) {
         Entity entity = event.getEntity();
         if (MonsterUtils.isGameMonsters(entity)) {
+            if (!(entity.getType() == EntityType.ZOMBIE || entity.getType() == EntityType.PIG_ZOMBIE)) {
+                event.getDrops().clear();
+            }
             event.setDroppedExp(0);
         }
     }
