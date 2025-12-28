@@ -39,7 +39,7 @@ public class FireBall implements Listener {
         }
         Player player = e.getPlayer();
         Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(player);
-        if (game == null || game.getState() != GameState.RUNNING || game.isOverSet()) {
+        if (game == null) {
             return;
         }
         if (game.isSpectator(player)) {

@@ -7,7 +7,6 @@ import cn.linmoyu.bedwarsitem.utils.TakeItemUtil;
 import cn.linmoyu.bedwarsitem.utils.Utils;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
-import io.github.bedwarsrel.game.GameState;
 import me.ram.bedwarsscoreboardaddon.utils.ColorUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -51,7 +50,7 @@ public class BridgeEgg implements Listener {
             return;
         }
         Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(player);
-        if (game == null || game.getState() != GameState.RUNNING || !game.getPlayers().contains(player) || game.isOverSet()) {
+        if (game == null) {
             return;
         }
         e.setCancelled(true);
@@ -70,52 +69,48 @@ public class BridgeEgg implements Listener {
 
             @Override
             public void run() {
-                if (!egg.isDead()) {
-                    new BukkitRunnable() {
-                        final Location location = egg.getLocation().add(0, -1, 0);
+                if (egg.isDead()) {
+                    this.cancel();
+                    return;
+                }
+                new BukkitRunnable() {
+                    final Location location = egg.getLocation().add(0, -1, 0);
 
-                        @Override
-                        public void run() {
-                            if (game.isOverSet() || game.getState() != GameState.RUNNING) {
-                                this.cancel();
-                                return;
-                            }
-                            location.setX((int) location.getX());
-                            location.setY((int) location.getY());
-                            location.setZ((int) location.getZ());
-                            List<Location> blocklocation = new ArrayList<>();
-                            blocklocation.add(location);
-                            Vector vector = egg.getVelocity();
-                            double x = vector.getX() > 0 ? vector.getX() : -vector.getX();
-                            double y = vector.getY() > 0 ? vector.getY() : -vector.getY();
-                            double z = vector.getZ() > 0 ? vector.getZ() : -vector.getZ();
-                            if (y < x || y < z) {
-                                blocklocation.add(LocationUtil.getLocation(location, -1, 0, -1));
-                                blocklocation.add(LocationUtil.getLocation(location, -1, 0, 0));
-                                blocklocation.add(LocationUtil.getLocation(location, 0, 0, -1));
-                            } else {
-                                blocklocation.add(LocationUtil.getLocation(location, 0, 1, 0));
-                                blocklocation.add(LocationUtil.getLocation(location, -1, 1, -1));
-                                blocklocation.add(LocationUtil.getLocation(location, -1, 1, 0));
-                                blocklocation.add(LocationUtil.getLocation(location, 0, 1, -1));
-                                blocklocation.add(LocationUtil.getLocation(location, -1, 0, -1));
-                                blocklocation.add(LocationUtil.getLocation(location, -1, 0, 0));
-                                blocklocation.add(LocationUtil.getLocation(location, 0, 0, -1));
-                            }
-                            for (Location loc : blocklocation) {
-                                Block block = loc.getBlock();
-                                if (block.getType() == new ItemStack(Material.AIR).getType() && !block.equals(player.getLocation().getBlock()) && !block.equals(player.getLocation().clone().add(0, 1, 0).getBlock()) && game.getRegion().isInRegion(loc) && i < Config.bridge_egg_max_blocks && Utils.isCanPlace(game, location)) {
-                                    loc.getBlock().setType(Material.SANDSTONE);
-                                    i++;
-                                    game.getRegion().addPlacedBlock(loc.getBlock(), null);
-                                    if (sound != null) player.playSound(player.getLocation(), sound, 1.0f, 1.0f);
-                                }
+                    @Override
+                    public void run() {
+                        location.setX((int) location.getX());
+                        location.setY((int) location.getY());
+                        location.setZ((int) location.getZ());
+                        List<Location> blocklocation = new ArrayList<>();
+                        blocklocation.add(location);
+                        Vector vector = egg.getVelocity();
+                        double x = vector.getX() > 0 ? vector.getX() : -vector.getX();
+                        double y = vector.getY() > 0 ? vector.getY() : -vector.getY();
+                        double z = vector.getZ() > 0 ? vector.getZ() : -vector.getZ();
+                        if (y < x || y < z) {
+                            blocklocation.add(LocationUtil.getLocation(location, -1, 0, -1));
+                            blocklocation.add(LocationUtil.getLocation(location, -1, 0, 0));
+                            blocklocation.add(LocationUtil.getLocation(location, 0, 0, -1));
+                        } else {
+                            blocklocation.add(LocationUtil.getLocation(location, 0, 1, 0));
+                            blocklocation.add(LocationUtil.getLocation(location, -1, 1, -1));
+                            blocklocation.add(LocationUtil.getLocation(location, -1, 1, 0));
+                            blocklocation.add(LocationUtil.getLocation(location, 0, 1, -1));
+                            blocklocation.add(LocationUtil.getLocation(location, -1, 0, -1));
+                            blocklocation.add(LocationUtil.getLocation(location, -1, 0, 0));
+                            blocklocation.add(LocationUtil.getLocation(location, 0, 0, -1));
+                        }
+                        for (Location loc : blocklocation) {
+                            Block block = loc.getBlock();
+                            if (block.getType() == new ItemStack(Material.AIR).getType() && !block.equals(player.getLocation().getBlock()) && !block.equals(player.getLocation().clone().add(0, 1, 0).getBlock()) && game.getRegion().isInRegion(loc) && i < Config.bridge_egg_max_blocks && Utils.isCanPlace(game, location)) {
+                                loc.getBlock().setType(Material.SANDSTONE);
+                                i++;
+                                game.getRegion().addPlacedBlock(loc.getBlock(), null);
+                                if (sound != null) player.playSound(player.getLocation(), sound, 1.0f, 1.0f);
                             }
                         }
-                    }.runTaskLater(BedwarsItem.getInstance(), 5L);
-                } else {
-                    cancel();
-                }
+                    }
+                }.runTaskLater(BedwarsItem.getInstance(), 5L);
             }
         }.runTaskTimer(BedwarsItem.getInstance(), 0L, 0L);
     }

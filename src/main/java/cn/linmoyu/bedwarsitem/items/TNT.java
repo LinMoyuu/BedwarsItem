@@ -26,10 +26,10 @@ public class TNT implements Listener {
             return;
         }
         Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(player);
-        if (game == null || game.getState() != GameState.RUNNING || game.isOverSet()) {
+        if (game == null) {
             return;
         }
-        if (game.isSpectator(player) || !game.getPlayers().contains(player)) {
+        if (game.isSpectator(player)) {
             return;
         }
 
