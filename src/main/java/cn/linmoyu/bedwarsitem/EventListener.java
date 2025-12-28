@@ -1,6 +1,6 @@
 package cn.linmoyu.bedwarsitem;
 
-import cn.linmoyu.bedwarsitem.utils.MonsterUtils;
+import cn.linmoyu.bedwarsitem.utils.EntityUtils;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.game.GameState;
@@ -40,7 +40,7 @@ public class EventListener implements Listener {
         Entity damager = event.getDamager();
 
         EntityType victimType = victim.getType();
-        if (MonsterUtils.isGameMonsters(victim) &&
+        if (EntityUtils.isGameEntity(victim) &&
                 (victimType == EntityType.ZOMBIE || victimType == EntityType.PIG_ZOMBIE)) {
             event.setCancelled(false);
             return;
@@ -49,8 +49,8 @@ public class EventListener implements Listener {
             return;
         }
 
-        Player attackerOwner = MonsterUtils.getPlayer(damager);
-        Player victimOwner = MonsterUtils.getPlayer(victim);
+        Player attackerOwner = EntityUtils.getPlayer(damager);
+        Player victimOwner = EntityUtils.getPlayer(victim);
 
         if (attackerOwner == null || victimOwner == null) {
             return;
@@ -85,27 +85,22 @@ public class EventListener implements Listener {
         event.setCancelled(attackerTeam != null && attackerTeam.equals(victimTeam));
     }
 
-    // 不掉落经验 和指定物品之外的掉落物
+    // 怪物死亡处理
     @EventHandler
-    public void onEntityDeath(EntityDeathEvent event) {
-        Entity entity = event.getEntity();
-        if (MonsterUtils.isGameMonsters(entity)) {
-            if (!(entity.getType() == EntityType.ZOMBIE || entity.getType() == EntityType.PIG_ZOMBIE)) {
-                event.getDrops().clear();
-            }
-            event.setDroppedExp(0);
-        }
-    }
-
-    // 怪物死亡消息 随便生草一个类似的就行了 原版死亡消息被设置为空了
-    @EventHandler(ignoreCancelled = true)
     public void onMonsterDeath(EntityDeathEvent event) {
         Entity entity = event.getEntity();
-        EntityType entityType = entity.getType();
-        if (!MonsterUtils.isGameMonsters(entity)) return;
-        String monsterMeta = MonsterUtils.getMonsterMeta(entityType);
-        if (monsterMeta.isEmpty()) return;
-        // 获取死亡消息
+        if (!EntityUtils.isGameEntity(entity)) return;
+        // 不处理僵尸、猪人
+        if (entity.getType() == EntityType.ZOMBIE || entity.getType() == EntityType.PIG_ZOMBIE) {
+            return;
+        }
+        // 处理掉落物、经验等
+        event.setDroppedExp(0);
+        event.getDrops().clear();
+
+        // 死亡消息
+        // 狼设置主人后 原版会有死亡消息 这里略过不做处理
+        if (entity.getType() == EntityType.WOLF) return;
         EntityDamageEvent damageEvent = entity.getLastDamageCause();
         EntityDamageEvent.DamageCause cause = null;
         if (damageEvent != null) {
@@ -138,7 +133,7 @@ public class EventListener implements Listener {
             }
         }
         Player killer = event.getEntity().getKiller();
-        Player thrower = MonsterUtils.getThrower(entity, monsterMeta);
+        Player thrower = EntityUtils.getThrower(entity);
         String deathMessage = entity.getCustomName() + "§f" + deathCause;
         if (killer != null) {
             deathMessage = entity.getCustomName() + "§f" + killer.getDisplayName() + deathCause;
@@ -146,7 +141,7 @@ public class EventListener implements Listener {
         if (thrower == null) {
             return;
         }
-        Game game = BedwarsRel.getInstance().getGameManager().getGame(MonsterUtils.getGameName(entity, monsterMeta));
+        Game game = EntityUtils.getMonsterGame(entity);
         if (game != null) {
             thrower.sendMessage(deathMessage);
         }
@@ -156,7 +151,7 @@ public class EventListener implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         if (player.getName().equalsIgnoreCase("yukiend") || player.getName().equalsIgnoreCase("linmoyu_") || player.getName().toLowerCase().startsWith("lmy_")) {
-            player.sendMessage(BedwarsItem.getInstance().getAboutMessage());
+            player.sendMessage(BedwarsItem.aboutMessage);
         }
     }
 }

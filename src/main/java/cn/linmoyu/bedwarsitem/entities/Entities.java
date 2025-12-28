@@ -1,11 +1,10 @@
-package cn.linmoyu.bedwarsitem.monsters;
+package cn.linmoyu.bedwarsitem.entities;
 
 import lombok.Getter;
 import org.bukkit.entity.EntityType;
 
 @Getter
-public enum Monsters {
-
+public enum Entities {
     GOLD_ZOMBIE(EntityType.ZOMBIE, "BwZombie"),
     DIAMOND_PIG_ZOMBIE(EntityType.PIG_ZOMBIE, "BwPigZombie"),
 
@@ -17,7 +16,7 @@ public enum Monsters {
     private final EntityType entityType;
     private final String meta;
 
-    Monsters(EntityType entityType, String meta) {
+    Entities(EntityType entityType, String meta) {
         this.entityType = entityType;
         this.meta = meta;
     }

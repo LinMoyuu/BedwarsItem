@@ -1,6 +1,7 @@
 package cn.linmoyu.bedwarsitem.utils;
 
-import cn.linmoyu.bedwarsitem.monsters.Monsters;
+import cn.linmoyu.bedwarsitem.entities.Entities;
+import cn.linmoyu.bedwarsitem.entities.EntityTaskManager;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.game.Team;
@@ -11,7 +12,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.*;
 import org.bukkit.projectiles.ProjectileSource;
 
-public class MonsterUtils {
+public class EntityUtils {
 
     public static Location getSpawnLocation(Location location, BlockFace blockFace) {
         Location spawnLocation = location.clone();
@@ -45,11 +46,11 @@ public class MonsterUtils {
         return spawnLocation;
     }
 
-    public static Player findNearestEnemy(LivingEntity entity, Player thrower) {
+    public static Player findNearestEnemy(Entity entity, Player thrower) {
         Player nearest = null;
         double nearestDistance = Double.MAX_VALUE;
 
-        Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(thrower);
+        Game game = getMonsterGame(entity);
         if (game == null) return null;
         Team throwerTeam = game.getPlayerTeam(thrower);
         if (throwerTeam == null) return null;
@@ -68,18 +69,22 @@ public class MonsterUtils {
         return nearest;
     }
 
-    public static boolean isGameMonsters(Entity entity) {
-        EntityType entityType = entity.getType();
-        for (Monsters monster : Monsters.values()) {
-            if (monster.getEntityType() == entityType && entity.hasMetadata(monster.getMeta())) {
-                return true;
-            }
-        }
-        return false;
+    public static boolean isGameEntity(Entity entity) {
+        return EntityTaskManager.petsList.contains(entity) || EntityTaskManager.monsterList.contains(entity);
     }
 
+//    public static boolean isGameMonsters(Entity entity) {
+//        EntityType entityType = entity.getType();
+//        for (Entities monster : Entities.values()) {
+//            if (monster.getEntityType() == entityType && entity.hasMetadata(monster.getMeta())) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
+
     public static String getMonsterMeta(EntityType entityType) {
-        for (Monsters monster : Monsters.values()) {
+        for (Entities monster : Entities.values()) {
             if (monster.getEntityType() == entityType) {
                 return monster.getMeta();
             }
@@ -87,22 +92,20 @@ public class MonsterUtils {
         return "";
     }
 
-    public static String getGameName(Entity entity, String meta) {
-        String gameName = meta;
-        if (entity == null || meta == null || meta.isEmpty()) return gameName;
+    public static Game getMonsterGame(Entity entity) {
+        String meta = getMonsterMeta(entity.getType());
+        if (meta == null || meta.isEmpty()) return null;
         String[] metas = entity.getMetadata(meta).get(0).asString().split(":");
-        if (metas.length < 1) return gameName;
-        gameName = metas[0];
-        return gameName;
+        if (metas.length < 1) return null;
+        return BedwarsRel.getInstance().getGameManager().getGame(metas[0]);
     }
 
-    public static Player getThrower(Entity entity, String meta) {
-        String throwerName;
-        if (entity == null || meta == null || meta.isEmpty()) return null;
+    public static Player getThrower(Entity entity) {
+        String meta = getMonsterMeta(entity.getType());
+        if (meta == null || meta.isEmpty()) return null;
         String[] metas = entity.getMetadata(meta).get(0).asString().split(":");
         if (metas.length < 2) return null;
-        throwerName = metas[1];
-        return Bukkit.getPlayerExact(throwerName);
+        return Bukkit.getPlayerExact(metas[1]);
     }
 
     public static Player getPlayer(Entity entity) {
@@ -124,9 +127,8 @@ public class MonsterUtils {
             }
         }
 
-        if (MonsterUtils.isGameMonsters(entity)) {
-            String monsterMeta = MonsterUtils.getMonsterMeta(entity.getType());
-            return MonsterUtils.getThrower(entity, monsterMeta);
+        if (EntityUtils.isGameEntity(entity)) {
+            return EntityUtils.getThrower(entity);
         }
 
         return null;

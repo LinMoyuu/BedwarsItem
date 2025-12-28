@@ -9,7 +9,7 @@ public class MainCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        sender.sendMessage(BedwarsItem.getInstance().getAboutMessage());
+        sender.sendMessage(BedwarsItem.aboutMessage);
 
         if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
             if (!sender.hasPermission("bedwarsitem.reload")) {

@@ -1,13 +1,12 @@
-package cn.linmoyu.bedwarsitem.monsters;
+package cn.linmoyu.bedwarsitem.entities;
 
 import cn.linmoyu.bedwarsitem.BedwarsItem;
 import cn.linmoyu.bedwarsitem.Config;
-import cn.linmoyu.bedwarsitem.utils.MonsterUtils;
+import cn.linmoyu.bedwarsitem.utils.EntityUtils;
 import cn.linmoyu.bedwarsitem.utils.TakeItemUtil;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.game.GameState;
-import me.ram.bedwarsscoreboardaddon.utils.BedwarsUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
@@ -20,7 +19,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class WolfSpawner implements Listener {
 
@@ -50,12 +48,12 @@ public class WolfSpawner implements Listener {
         }
 
         TakeItemUtil.TakeItem(player, handItem);
-        Location spawnLocation = MonsterUtils.getSpawnLocation(event.getClickedBlock().getLocation(), event.getBlockFace());
+        Location spawnLocation = EntityUtils.getSpawnLocation(event.getClickedBlock().getLocation(), event.getBlockFace());
         spawnWolf(game, spawnLocation, thrower);
     }
 
     private void spawnWolf(Game game, Location location, Player thrower) {
-        String meta = Monsters.PETS_WOLF.getMeta();
+        String meta = Entities.PETS_WOLF.getMeta();
         Wolf wolf = (Wolf) location.getWorld().spawnEntity(location, EntityType.WOLF);
         wolf.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + ":" + thrower.getName()));
 
@@ -65,46 +63,8 @@ public class WolfSpawner implements Listener {
         wolf.setOwner(thrower);
         wolf.setTamed(true);
 
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                Player thrower = MonsterUtils.getThrower(wolf, meta);
-                if (wolf.isDead() || !wolf.isValid() || thrower == null || !thrower.isOnline()) {
-                    wolf.remove();
-                    this.cancel();
-                    return;
-                }
-                if (BedwarsUtil.isRespawning(game, thrower) || wolf.isSitting()) {
-                    return;
-                }
+        EntityTaskManager.addPet(wolf);
 
-                double distance = wolf.getLocation().distance(thrower.getLocation());
-                if (distance > 20) {
-                    wolf.teleport(thrower);
-                }
-            }
-        }.runTaskTimer(BedwarsItem.getInstance(), 0L, 200L);
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                Player thrower = MonsterUtils.getThrower(wolf, meta);
-                if (wolf.isDead() || !wolf.isValid() || thrower == null || !thrower.isOnline()) {
-                    wolf.remove();
-                    this.cancel();
-                    return;
-                }
-
-                Player target = MonsterUtils.findNearestEnemy(wolf, thrower);
-                // 设置目标
-                wolf.setTarget(target);
-//                if (target == null) {
-//                    NoAIUtils.setAI(wolf, false);
-//                } else {
-//                    wolf.setTarget(target);
-//                    NoAIUtils.setAI(wolf, true);
-//                }
-            }
-        }.runTaskTimer(BedwarsItem.getInstance(), 0L, 20L);
     }
 
 }

@@ -1,11 +1,12 @@
 package cn.linmoyu.bedwarsitem;
 
+import cn.linmoyu.bedwarsitem.entities.*;
 import cn.linmoyu.bedwarsitem.items.BridgeEgg;
 import cn.linmoyu.bedwarsitem.items.ExplosionProof;
 import cn.linmoyu.bedwarsitem.items.FireBall;
 import cn.linmoyu.bedwarsitem.items.TNT;
-import cn.linmoyu.bedwarsitem.monsters.*;
 import lombok.Getter;
+import me.ram.bedwarsscoreboardaddon.Main;
 import me.ram.bedwarsscoreboardaddon.utils.ColorUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
@@ -15,14 +16,13 @@ public final class BedwarsItem extends JavaPlugin implements Listener {
 
     @Getter
     private static BedwarsItem instance;
-    @Getter
-    private String aboutMessage = ColorUtil.color("§f* This server is running §bBedwarsItem Plugin§f. \n§f* By §b@YukiEnd §f| §bLinMoyu_ §7v" + getDescription().getVersion());
-
+    public static String aboutMessage;
     @Override
     public void onEnable() {
         // Plugin startup logic
-        Config.setupConfig(this);
         instance = this;
+        Config.setupConfig(this);
+        aboutMessage = ColorUtil.color("§f* This server is running §bBedwarsItem Plugin§f. \n§f* By §b@YukiEnd §f| §bLinMoyu_ §7v" + Main.getInstance().getDescription().getVersion());
         Bukkit.getPluginManager().registerEvents(new EventListener(), this);
         Bukkit.getPluginManager().registerEvents(new BridgeEgg(), this);
         Bukkit.getPluginManager().registerEvents(new ExplosionProof(), this);
