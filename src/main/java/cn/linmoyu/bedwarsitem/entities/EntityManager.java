@@ -95,7 +95,7 @@ public final class EntityManager implements Listener {
     }
 
     public static void startTasks() {
-        if (teleportPetsTask == null || teleportPetsTask.isCancelled()) {
+        if (teleportPetsTask == null) {
             teleportPetsTask = new BukkitRunnable() {
                 @Override
                 public void run() {
@@ -123,7 +123,7 @@ public final class EntityManager implements Listener {
             }.runTaskTimer(BedwarsItem.getInstance(), 0L, TELEPORT_TASK_INTERVAL);
         }
 
-        if (targetPlayerTask == null || targetPlayerTask.isCancelled()) {
+        if (targetPlayerTask == null) {
             targetPlayerTask = new BukkitRunnable() {
                 @Override
                 public void run() {
