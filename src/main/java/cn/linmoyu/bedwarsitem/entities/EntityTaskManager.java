@@ -36,8 +36,8 @@ public final class EntityTaskManager implements Listener {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    Player thrower = EntityUtils.getThrower(skeleton);
-                    if (skeleton.isDead() || !skeleton.isValid() || thrower == null || !thrower.isOnline()) {
+                    Player spawner = EntityUtils.getSpawner(skeleton);
+                    if (skeleton.isDead() || !skeleton.isValid() || spawner == null || !spawner.isOnline()) {
                         this.cancel();
                         return;
                     }
@@ -77,7 +77,7 @@ public final class EntityTaskManager implements Listener {
                 Iterator<Entity> iterator = petsList.iterator();
                 while (iterator.hasNext()) {
                     Entity pet = iterator.next();
-                    Player owner = EntityUtils.getThrower(pet);
+                    Player owner = EntityUtils.getSpawner(pet);
                     if (isPetInvalid(pet, owner)) {
                         iterator.remove();
                         pet.remove();
@@ -108,7 +108,7 @@ public final class EntityTaskManager implements Listener {
                 Iterator<Entity> iterator = petsList.iterator();
                 while (iterator.hasNext()) {
                     Entity pet = iterator.next();
-                    Player owner = EntityUtils.getThrower(pet);
+                    Player owner = EntityUtils.getSpawner(pet);
 
                     if (isPetInvalid(pet, owner)) {
                         iterator.remove();

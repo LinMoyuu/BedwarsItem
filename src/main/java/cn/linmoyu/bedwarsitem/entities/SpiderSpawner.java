@@ -25,7 +25,7 @@ public class SpiderSpawner implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInteract(PlayerInteractEvent event) {
         if (!Config.spider_spawner_enabled) return;
-        Player thrower = event.getPlayer();
+        Player spawner = event.getPlayer();
         ItemStack handItem = event.getItem();
         if (handItem == null || (handItem.getType() != Material.MONSTER_EGG && handItem.getType() != Material.MONSTER_EGGS)) {
             return;
@@ -49,16 +49,16 @@ public class SpiderSpawner implements Listener {
 
         TakeItemUtil.TakeItem(player, handItem);
         Location spawnLocation = EntityUtils.getSpawnLocation(event.getClickedBlock().getLocation(), event.getBlockFace());
-        spawnSpider(game, spawnLocation, thrower);
+        spawnSpider(game, spawnLocation, spawner);
     }
 
-    private void spawnSpider(Game game, Location location, Player thrower) {
+    private void spawnSpider(Game game, Location location, Player spawner) {
         String meta = Entities.PETS_SPIDER.getMeta();
         Spider spider = (Spider) location.getWorld().spawnEntity(location, EntityType.SPIDER);
-        spider.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + ":" + thrower.getName()));
+        spider.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + ":" + spawner.getName()));
 
         // 设置自定义属性
-        spider.setCustomName("§a§l[" + thrower.getDisplayName() + "§a§l] §b§l的宠物");
+        spider.setCustomName("§a§l[" + spawner.getDisplayName() + "§a§l] §b§l的宠物");
         spider.setRemoveWhenFarAway(false);
 
         EntityTaskManager.addPet(spider);

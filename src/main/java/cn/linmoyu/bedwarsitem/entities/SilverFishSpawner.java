@@ -27,7 +27,7 @@ public class SilverFishSpawner implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInteract(PlayerInteractEvent event) {
         if (!Config.silverfish_spawner_enabled) return;
-        Player thrower = event.getPlayer();
+        Player spawner = event.getPlayer();
         ItemStack handItem = event.getItem();
         if (handItem == null || (handItem.getType() != Material.MONSTER_EGG && handItem.getType() != Material.MONSTER_EGGS)) {
             return;
@@ -51,16 +51,16 @@ public class SilverFishSpawner implements Listener {
 
         TakeItemUtil.TakeItem(player, handItem);
         Location spawnLocation = EntityUtils.getSpawnLocation(event.getClickedBlock().getLocation(), event.getBlockFace());
-        spawnSilverfish(game, spawnLocation, thrower);
+        spawnSilverfish(game, spawnLocation, spawner);
     }
 
-    private void spawnSilverfish(Game game, Location location, Player thrower) {
+    private void spawnSilverfish(Game game, Location location, Player spawner) {
         String meta = Entities.PETS_SILVERFISH.getMeta();
         Silverfish silverfish = (Silverfish) location.getWorld().spawnEntity(location, EntityType.SILVERFISH);
-        silverfish.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + ":" + thrower.getName()));
+        silverfish.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + ":" + spawner.getName()));
 
         // 设置自定义属性
-        silverfish.setCustomName("§a§l[" + thrower.getDisplayName() + "§a§l] §b§l的宠物");
+        silverfish.setCustomName("§a§l[" + spawner.getDisplayName() + "§a§l] §b§l的宠物");
 //        silverfish.setCustomNameVisible(true);
         silverfish.setRemoveWhenFarAway(false);
 

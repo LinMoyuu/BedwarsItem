@@ -46,18 +46,18 @@ public class EntityUtils {
         return spawnLocation;
     }
 
-    public static Player findNearestEnemy(Entity entity, Player thrower) {
+    public static Player findNearestEnemy(Entity entity, Player spawner) {
         Player nearest = null;
         double nearestDistance = Double.MAX_VALUE;
 
         Game game = getMonsterGame(entity);
         if (game == null) return null;
-        Team throwerTeam = game.getPlayerTeam(thrower);
-        if (throwerTeam == null) return null;
+        Team spawnerTeam = game.getPlayerTeam(spawner);
+        if (spawnerTeam == null) return null;
         for (Player player : entity.getWorld().getPlayers()) {
-            if (thrower.equals(player)) continue;
+            if (spawner.equals(player)) continue;
             if (game.isSpectator(player) || player.getGameMode() == GameMode.SPECTATOR) continue;
-            if (throwerTeam == game.getPlayerTeam(player)) continue;
+            if (spawnerTeam == game.getPlayerTeam(player)) continue;
 
             // 检查距离
             double distance = player.getLocation().distance(entity.getLocation());
@@ -100,7 +100,7 @@ public class EntityUtils {
         return BedwarsRel.getInstance().getGameManager().getGame(metas[0]);
     }
 
-    public static Player getThrower(Entity entity) {
+    public static Player getSpawner(Entity entity) {
         String meta = getMonsterMeta(entity.getType());
         if (meta == null || meta.isEmpty()) return null;
         String[] metas = entity.getMetadata(meta).get(0).asString().split(":");
@@ -125,10 +125,6 @@ public class EntityUtils {
             if (source != null) {
                 return getPlayer(source);
             }
-        }
-
-        if (EntityUtils.isGameEntity(entity)) {
-            return EntityUtils.getThrower(entity);
         }
 
         return null;

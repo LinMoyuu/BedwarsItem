@@ -25,7 +25,7 @@ public class WolfSpawner implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInteract(PlayerInteractEvent event) {
         if (!Config.wolf_spawner_enabled) return;
-        Player thrower = event.getPlayer();
+        Player spawner = event.getPlayer();
         ItemStack handItem = event.getItem();
         if (handItem == null || (handItem.getType() != Material.MONSTER_EGG && handItem.getType() != Material.MONSTER_EGGS)) {
             return;
@@ -49,18 +49,18 @@ public class WolfSpawner implements Listener {
 
         TakeItemUtil.TakeItem(player, handItem);
         Location spawnLocation = EntityUtils.getSpawnLocation(event.getClickedBlock().getLocation(), event.getBlockFace());
-        spawnWolf(game, spawnLocation, thrower);
+        spawnWolf(game, spawnLocation, spawner);
     }
 
-    private void spawnWolf(Game game, Location location, Player thrower) {
+    private void spawnWolf(Game game, Location location, Player spawner) {
         String meta = Entities.PETS_WOLF.getMeta();
         Wolf wolf = (Wolf) location.getWorld().spawnEntity(location, EntityType.WOLF);
-        wolf.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + ":" + thrower.getName()));
+        wolf.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + ":" + spawner.getName()));
 
         // 设置自定义属性
-        wolf.setCustomName("§a§l[" + thrower.getDisplayName() + "§a§l] §b§l的宠物");
+        wolf.setCustomName("§a§l[" + spawner.getDisplayName() + "§a§l] §b§l的宠物");
         wolf.setRemoveWhenFarAway(false);
-        wolf.setOwner(thrower);
+        wolf.setOwner(spawner);
         wolf.setTamed(true);
 
         EntityTaskManager.addPet(wolf);

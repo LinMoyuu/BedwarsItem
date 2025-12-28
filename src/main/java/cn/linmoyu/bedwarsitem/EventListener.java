@@ -3,13 +3,12 @@ package cn.linmoyu.bedwarsitem;
 import cn.linmoyu.bedwarsitem.utils.EntityUtils;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
-import io.github.bedwarsrel.game.GameState;
 import io.github.bedwarsrel.game.Team;
 import org.bukkit.GameMode;
-import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -27,62 +26,67 @@ public class EventListener implements Listener {
         if (event.isCancelled() && (event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CUSTOM || event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.SPAWNER_EGG)) {
             event.setCancelled(false);
         }
-//        Entity entity = event.getEntity();
-//        EntityType entityType = event.getEntityType();
-//        if (event.isCancelled() && MonsterUtils.isGameMonsters(entity, entityType)) {
-//            event.setCancelled(false);
-//        }
     }
 
+    // 用于处理玩家攻击生物
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onEntityDamage(EntityDamageByEntityEvent event) {
-        Entity victim = event.getEntity();
+    public void onPlayerAttackMonster(EntityDamageByEntityEvent event) {
+        Entity entity = event.getEntity();
         Entity damager = event.getDamager();
-
-        EntityType victimType = victim.getType();
-        if (EntityUtils.isGameEntity(victim) &&
-                (victimType == EntityType.ZOMBIE || victimType == EntityType.PIG_ZOMBIE)) {
+        if (!EntityUtils.isGameEntity(entity)) {
+            return;
+        }
+        Player player = EntityUtils.getPlayer(damager);
+        if (player == null) {
+            return;
+        }
+        Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(player);
+        if (game == null) return;
+        Player spawner = EntityUtils.getSpawner(entity);
+        // 默认为僵尸、猪人
+        if (spawner == null) {
             event.setCancelled(false);
             return;
         }
-        if (damager instanceof EnderPearl) {
+        Team spawnerTeam = game.getPlayerTeam(spawner);
+        Team playerTeam = game.getPlayerTeam(player);
+        if (game.isSpectator(player) || player.getGameMode() == GameMode.SPECTATOR || spawner == player || spawnerTeam == null || playerTeam == null || spawnerTeam == playerTeam) {
+            event.setCancelled(true);
             return;
         }
+        event.setCancelled(false);
+    }
 
-        Player attackerOwner = EntityUtils.getPlayer(damager);
-        Player victimOwner = EntityUtils.getPlayer(victim);
-
-        if (attackerOwner == null || victimOwner == null) {
-            return;
-        } else if (victim.getType() == EntityType.ZOMBIE || victim.getType() == EntityType.PIG_ZOMBIE) {
-            event.setCancelled(false);
-            return;
-        }
-
-        Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(attackerOwner);
-        if (game == null) {
-            game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(victimOwner);
-            if (game == null) {
+    // 用于生物攻击玩家
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onMonsterAttack(EntityDamageByEntityEvent event) {
+        Entity damager = event.getDamager();
+        if (!EntityUtils.isGameEntity(damager)) {
+            if (damager instanceof Projectile) {
+                Projectile projectile = (Projectile) damager;
+                Entity shooter = (Entity) projectile.getShooter();
+                if (EntityUtils.isGameEntity(shooter)) {
+                    damager = shooter;
+                } else {
+                    return;
+                }
+            } else {
                 return;
             }
         }
-        if (game.getState() != GameState.RUNNING) return;
+        if (!(event.getEntity() instanceof Player)) return;
+        Player player = (Player) event.getEntity();
+        if (player == null) return;
 
-        if (attackerOwner.equals(victimOwner)) {
+        Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(player);
+        if (game == null) return;
+        Player spawner = EntityUtils.getSpawner(damager);
+        if (spawner == null) return;
+        Team spawnerTeam = game.getPlayerTeam(spawner);
+        Team playerTeam = game.getPlayerTeam(player);
+        if (game.isSpectator(player) || player.getGameMode() == GameMode.SPECTATOR || spawner == player || spawnerTeam == null || playerTeam == null || spawnerTeam == playerTeam) {
             event.setCancelled(true);
-            return;
         }
-
-        if ((victim instanceof Player && (game.isSpectator((Player) victim) || ((Player) victim).getGameMode() == GameMode.SPECTATOR)) ||
-                (game.isSpectator(attackerOwner) || attackerOwner.getGameMode() == GameMode.SPECTATOR)) {
-            event.setCancelled(true);
-            return;
-        }
-
-        Team attackerTeam = game.getPlayerTeam(attackerOwner);
-        Team victimTeam = game.getPlayerTeam(victimOwner);
-
-        event.setCancelled(attackerTeam != null && attackerTeam.equals(victimTeam));
     }
 
     // 怪物死亡处理
@@ -133,17 +137,17 @@ public class EventListener implements Listener {
             }
         }
         Player killer = event.getEntity().getKiller();
-        Player thrower = EntityUtils.getThrower(entity);
+        Player spawner = EntityUtils.getSpawner(entity);
         String deathMessage = entity.getCustomName() + "§f" + deathCause;
         if (killer != null) {
             deathMessage = entity.getCustomName() + "§f" + killer.getDisplayName() + deathCause;
         }
-        if (thrower == null) {
+        if (spawner == null) {
             return;
         }
         Game game = EntityUtils.getMonsterGame(entity);
         if (game != null) {
-            thrower.sendMessage(deathMessage);
+            spawner.sendMessage(deathMessage);
         }
     }
 

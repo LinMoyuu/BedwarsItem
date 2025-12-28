@@ -25,7 +25,7 @@ public class SkeletonSpawner implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInteract(PlayerInteractEvent event) {
         if (!Config.skeleton_spawner_enabled) return;
-        Player thrower = event.getPlayer();
+        Player spawner = event.getPlayer();
         ItemStack handItem = event.getItem();
         if (handItem == null || (handItem.getType() != Material.MONSTER_EGG && handItem.getType() != Material.MONSTER_EGGS)) {
             return;
@@ -49,17 +49,17 @@ public class SkeletonSpawner implements Listener {
 
         TakeItemUtil.TakeItem(player, handItem);
         Location spawnLocation = EntityUtils.getSpawnLocation(event.getClickedBlock().getLocation(), event.getBlockFace());
-        spawnSkeleton(game, spawnLocation, thrower);
+        spawnSkeleton(game, spawnLocation, spawner);
     }
 
-    private void spawnSkeleton(Game game, Location location, Player thrower) {
+    private void spawnSkeleton(Game game, Location location, Player spawner) {
         String meta = Entities.PETS_SKELETON.getMeta();
         Skeleton skeleton = (Skeleton) location.getWorld().spawnEntity(location, EntityType.SKELETON);
-        skeleton.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + ":" + thrower.getName()));
+        skeleton.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + ":" + spawner.getName()));
         skeleton.getEquipment().setItemInHandDropChance(0.0f); // 不掉落
 
         // 设置自定义属性
-        skeleton.setCustomName("§a§l[" + thrower.getDisplayName() + "§a§l] §b§l的宠物");
+        skeleton.setCustomName("§a§l[" + spawner.getDisplayName() + "§a§l] §b§l的宠物");
         skeleton.setRemoveWhenFarAway(false);
         skeleton.setFireTicks(0);
 
