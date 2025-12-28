@@ -1,15 +1,15 @@
 package cn.linmoyu.bedwarsitem.utils;
 
-import cn.linmoyu.bedwarsitem.entities.Entities;
-import cn.linmoyu.bedwarsitem.entities.EntityTaskManager;
-import io.github.bedwarsrel.BedwarsRel;
+import cn.linmoyu.bedwarsitem.entities.EntityManager;
 import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.game.Team;
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.projectiles.ProjectileSource;
 
 public class EntityUtils {
@@ -50,7 +50,7 @@ public class EntityUtils {
         Player nearest = null;
         double nearestDistance = Double.MAX_VALUE;
 
-        Game game = getMonsterGame(entity);
+        Game game = getPetGame(entity);
         if (game == null) return null;
         Team spawnerTeam = game.getPlayerTeam(spawner);
         if (spawnerTeam == null) return null;
@@ -69,44 +69,28 @@ public class EntityUtils {
         return nearest;
     }
 
+    /**
+     * 检查实体是否为游戏内由插件生成的实体（宠物或怪物）。
+     */
     public static boolean isGameEntity(Entity entity) {
-        return EntityTaskManager.petsList.contains(entity) || EntityTaskManager.monsterList.contains(entity);
+        // 调用 EntityManager 的新公共方法
+        return EntityManager.isPet(entity) || EntityManager.monsterList.contains(entity);
     }
 
-//    public static boolean isGameMonsters(Entity entity) {
-//        EntityType entityType = entity.getType();
-//        for (Entities monster : Entities.values()) {
-//            if (monster.getEntityType() == entityType && entity.hasMetadata(monster.getMeta())) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-
-    public static String getMonsterMeta(EntityType entityType) {
-        for (Entities monster : Entities.values()) {
-            if (monster.getEntityType() == entityType) {
-                return monster.getMeta();
-            }
-        }
-        return "";
+    /**
+     * 获取宠物所在的游戏。
+     */
+    public static Game getPetGame(Entity entity) {
+        return EntityManager.getGame(entity);
     }
 
-    public static Game getMonsterGame(Entity entity) {
-        String meta = getMonsterMeta(entity.getType());
-        if (meta == null || meta.isEmpty()) return null;
-        String[] metas = entity.getMetadata(meta).get(0).asString().split(":");
-        if (metas.length < 1) return null;
-        return BedwarsRel.getInstance().getGameManager().getGame(metas[0]);
+    /**
+     * 获取宠物的生成者（主人）。
+     */
+    public static Player getSpawner(Entity pet) {
+        return EntityManager.getSpawner(pet);
     }
 
-    public static Player getSpawner(Entity entity) {
-        String meta = getMonsterMeta(entity.getType());
-        if (meta == null || meta.isEmpty()) return null;
-        String[] metas = entity.getMetadata(meta).get(0).asString().split(":");
-        if (metas.length < 2) return null;
-        return Bukkit.getPlayerExact(metas[1]);
-    }
 
     public static Player getPlayer(Entity entity) {
         if (entity instanceof Player) {

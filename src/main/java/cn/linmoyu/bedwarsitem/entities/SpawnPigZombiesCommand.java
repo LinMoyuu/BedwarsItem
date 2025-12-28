@@ -1,6 +1,5 @@
 package cn.linmoyu.bedwarsitem.entities;
 
-import cn.linmoyu.bedwarsitem.BedwarsItem;
 import cn.linmoyu.bedwarsitem.Config;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
@@ -14,7 +13,6 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.PigZombie;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -62,8 +60,7 @@ public class SpawnPigZombiesCommand implements CommandExecutor, TabCompleter {
         pigZombie.getEquipment().setItemInHandDropChance(1.0f); // 主手物品100%掉落
         pigZombie.setCustomNameVisible(false);
         pigZombie.setRemoveWhenFarAway(false);
-        pigZombie.setMetadata(Entities.DIAMOND_PIG_ZOMBIE.getMeta(), new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + ":" + spawnerLocation));
-        EntityTaskManager.addMonster(pigZombie);
+        EntityManager.addMonster(pigZombie, game);
     }
 
     @Override

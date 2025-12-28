@@ -1,5 +1,6 @@
 package cn.linmoyu.bedwarsitem;
 
+import cn.linmoyu.bedwarsitem.entities.EntityManager;
 import cn.linmoyu.bedwarsitem.utils.EntityUtils;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
@@ -94,8 +95,8 @@ public class EventListener implements Listener {
     public void onMonsterDeath(EntityDeathEvent event) {
         Entity entity = event.getEntity();
         if (!EntityUtils.isGameEntity(entity)) return;
-        // 不处理僵尸、猪人
-        if (entity.getType() == EntityType.ZOMBIE || entity.getType() == EntityType.PIG_ZOMBIE) {
+        // 不处理MonsterList中的怪物
+        if (EntityManager.monsterList.contains(entity)) {
             return;
         }
         // 处理掉落物、经验等
@@ -145,7 +146,7 @@ public class EventListener implements Listener {
         if (spawner == null) {
             return;
         }
-        Game game = EntityUtils.getMonsterGame(entity);
+        Game game = EntityUtils.getPetGame(entity);
         if (game != null) {
             spawner.sendMessage(deathMessage);
         }

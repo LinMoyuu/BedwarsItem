@@ -1,6 +1,5 @@
 package cn.linmoyu.bedwarsitem.entities;
 
-import cn.linmoyu.bedwarsitem.BedwarsItem;
 import cn.linmoyu.bedwarsitem.Config;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
@@ -14,7 +13,6 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -64,8 +62,7 @@ public class SpawnZombiesCommand implements CommandExecutor, TabCompleter {
         zombie.getEquipment().setItemInHandDropChance(1.0f); // 主手物品100%掉落
         zombie.setCustomNameVisible(false);
         zombie.setRemoveWhenFarAway(false);
-        zombie.setMetadata(Entities.GOLD_ZOMBIE.getMeta(), new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + ":" + spawnerLocation));
-        EntityTaskManager.addMonster(zombie);
+        EntityManager.addMonster(zombie, game);
     }
 
     @Override

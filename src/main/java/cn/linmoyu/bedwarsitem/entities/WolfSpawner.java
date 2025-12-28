@@ -1,6 +1,5 @@
 package cn.linmoyu.bedwarsitem.entities;
 
-import cn.linmoyu.bedwarsitem.BedwarsItem;
 import cn.linmoyu.bedwarsitem.Config;
 import cn.linmoyu.bedwarsitem.utils.EntityUtils;
 import cn.linmoyu.bedwarsitem.utils.TakeItemUtil;
@@ -18,7 +17,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
 
 public class WolfSpawner implements Listener {
 
@@ -53,9 +51,7 @@ public class WolfSpawner implements Listener {
     }
 
     private void spawnWolf(Game game, Location location, Player spawner) {
-        String meta = Entities.PETS_WOLF.getMeta();
         Wolf wolf = (Wolf) location.getWorld().spawnEntity(location, EntityType.WOLF);
-        wolf.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + ":" + spawner.getName()));
 
         // 设置自定义属性
         wolf.setCustomName("§a§l[" + spawner.getDisplayName() + "§a§l] §b§l的宠物");
@@ -63,7 +59,7 @@ public class WolfSpawner implements Listener {
         wolf.setOwner(spawner);
         wolf.setTamed(true);
 
-        EntityTaskManager.addPet(wolf);
+        EntityManager.addPet(wolf, game, spawner);
 
     }
 

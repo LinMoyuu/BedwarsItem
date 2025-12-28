@@ -1,6 +1,5 @@
 package cn.linmoyu.bedwarsitem.entities;
 
-import cn.linmoyu.bedwarsitem.BedwarsItem;
 import cn.linmoyu.bedwarsitem.Config;
 import cn.linmoyu.bedwarsitem.utils.EntityUtils;
 import cn.linmoyu.bedwarsitem.utils.TakeItemUtil;
@@ -18,7 +17,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
 
 public class SkeletonSpawner implements Listener {
 
@@ -53,9 +51,7 @@ public class SkeletonSpawner implements Listener {
     }
 
     private void spawnSkeleton(Game game, Location location, Player spawner) {
-        String meta = Entities.PETS_SKELETON.getMeta();
         Skeleton skeleton = (Skeleton) location.getWorld().spawnEntity(location, EntityType.SKELETON);
-        skeleton.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + ":" + spawner.getName()));
         skeleton.getEquipment().setItemInHandDropChance(0.0f); // 不掉落
 
         // 设置自定义属性
@@ -63,7 +59,7 @@ public class SkeletonSpawner implements Listener {
         skeleton.setRemoveWhenFarAway(false);
         skeleton.setFireTicks(0);
 
-        EntityTaskManager.addPet(skeleton);
+        EntityManager.addPet(skeleton, game, spawner);
     }
 
 }

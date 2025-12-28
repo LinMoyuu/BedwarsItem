@@ -1,6 +1,5 @@
 package cn.linmoyu.bedwarsitem.entities;
 
-import cn.linmoyu.bedwarsitem.BedwarsItem;
 import cn.linmoyu.bedwarsitem.Config;
 import cn.linmoyu.bedwarsitem.utils.EntityUtils;
 import cn.linmoyu.bedwarsitem.utils.TakeItemUtil;
@@ -20,7 +19,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
 
 public class SilverFishSpawner implements Listener {
 
@@ -55,22 +53,20 @@ public class SilverFishSpawner implements Listener {
     }
 
     private void spawnSilverfish(Game game, Location location, Player spawner) {
-        String meta = Entities.PETS_SILVERFISH.getMeta();
         Silverfish silverfish = (Silverfish) location.getWorld().spawnEntity(location, EntityType.SILVERFISH);
-        silverfish.setMetadata(meta, new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + ":" + spawner.getName()));
 
         // 设置自定义属性
         silverfish.setCustomName("§a§l[" + spawner.getDisplayName() + "§a§l] §b§l的宠物");
 //        silverfish.setCustomNameVisible(true);
         silverfish.setRemoveWhenFarAway(false);
 
-        EntityTaskManager.addPet(silverfish);
+        EntityManager.addPet(silverfish, game, spawner);
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onSilverfishChangeBlock(EntityChangeBlockEvent event) {
         Entity entity = event.getEntity();
-        if (entity.getType() == EntityType.SILVERFISH && entity.hasMetadata(Entities.PETS_SILVERFISH.getMeta())) {
+        if (entity.getType() == EntityType.SILVERFISH && EntityUtils.isGameEntity(entity)) {
             event.setCancelled(true);
         }
     }
