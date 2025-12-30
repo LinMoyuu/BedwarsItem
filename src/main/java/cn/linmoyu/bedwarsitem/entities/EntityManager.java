@@ -1,6 +1,7 @@
 package cn.linmoyu.bedwarsitem.entities;
 
 import cn.linmoyu.bedwarsitem.BedwarsItem;
+import cn.linmoyu.bedwarsitem.Config;
 import cn.linmoyu.bedwarsitem.utils.EntityUtils;
 import io.github.bedwarsrel.game.Game;
 import lombok.Getter;
@@ -21,10 +22,6 @@ public final class EntityManager implements Listener {
 
     private static BukkitTask teleportPetsTask;
     private static BukkitTask targetPlayerTask;
-
-    private static final long TELEPORT_TASK_INTERVAL = 200L;
-    private static final long TARGET_TASK_INTERVAL = 20L;
-    private static final double MAX_DISTANCE_BEFORE_TELEPORT = 20.0;
 
     /**
      * 检查一个实体是否为当前管理的宠物。
@@ -114,13 +111,13 @@ public final class EntityManager implements Listener {
                         if (BedwarsUtil.isRespawning(owner)) continue;
                         if (pet instanceof Wolf && ((Wolf) pet).isSitting()) continue;
 
-                        if (pet.getLocation().distanceSquared(owner.getLocation()) > MAX_DISTANCE_BEFORE_TELEPORT * MAX_DISTANCE_BEFORE_TELEPORT) {
+                        if (pet.getLocation().distanceSquared(owner.getLocation()) > Config.max_distance_teleport * Config.max_distance_teleport) {
                             pet.teleport(owner);
                         }
                     }
                     if (pets.isEmpty()) stopTasks();
                 }
-            }.runTaskTimer(BedwarsItem.getInstance(), 0L, TELEPORT_TASK_INTERVAL);
+            }.runTaskTimer(BedwarsItem.getInstance(), 0L, Config.teleport_owner_interval);
         }
 
         if (targetPlayerTask == null) {
@@ -138,7 +135,7 @@ public final class EntityManager implements Listener {
                         }
                     });
                 }
-            }.runTaskTimer(BedwarsItem.getInstance(), 0L, TARGET_TASK_INTERVAL);
+            }.runTaskTimer(BedwarsItem.getInstance(), 0L, Config.target_enemy_interval);
         }
     }
 

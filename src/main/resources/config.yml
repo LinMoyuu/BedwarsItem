@@ -31,6 +31,10 @@ spawner:
   skeleton: true
   spider: true
   wolf: true
+  task:
+    teleport_owner_interval: 20
+    target_enemy_interval: 200
+    max_distance_teleport: 20.0
 
 tutorial_book:
   enabled: true

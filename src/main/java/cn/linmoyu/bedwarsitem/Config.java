@@ -25,6 +25,9 @@ public class Config {
     public static boolean skeleton_spawner_enabled;
     public static boolean spider_spawner_enabled;
     public static boolean wolf_spawner_enabled;
+    public static int teleport_owner_interval;
+    public static int target_enemy_interval;
+    public static double max_distance_teleport;
 
     public static void setupConfig(Plugin plugin) {
         plugin.saveDefaultConfig();
@@ -50,6 +53,8 @@ public class Config {
         silverfish_spawner_enabled = config.getBoolean("spawner.silverfish");
         skeleton_spawner_enabled = config.getBoolean("spawner.skeleton");
         spider_spawner_enabled = config.getBoolean("spawner.spider");
-        wolf_spawner_enabled = config.getBoolean("spawner.wolf");
+        teleport_owner_interval = config.getInt("spawner.task.teleport_owner_interval");
+        target_enemy_interval = config.getInt("spawner.task.target_enemy_interval");
+        max_distance_teleport = config.getDouble("spawner.task.max_distance_teleport");
     }
 }
