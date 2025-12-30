@@ -20,6 +20,7 @@ public class Config {
     public static float tnt_yield;
     public static int tnt_fuse_ticks;
     public static int tnt_damage;
+    public static boolean tutorial_book_enabled;
     public static boolean silverfish_spawner_enabled;
     public static boolean skeleton_spawner_enabled;
     public static boolean spider_spawner_enabled;
@@ -45,6 +46,7 @@ public class Config {
         tnt_yield = (float) config.getDouble("tnt.yield");
         tnt_fuse_ticks = config.getInt("tnt.fuse_ticks");
         tnt_damage = config.getInt("tnt.damage");
+        tutorial_book_enabled = config.getBoolean("tutorial_book.enabled");
         silverfish_spawner_enabled = config.getBoolean("spawner.silverfish");
         skeleton_spawner_enabled = config.getBoolean("spawner.skeleton");
         spider_spawner_enabled = config.getBoolean("spawner.spider");

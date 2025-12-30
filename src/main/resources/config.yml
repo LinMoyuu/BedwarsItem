@@ -31,3 +31,6 @@ spawner:
   skeleton: true
   spider: true
   wolf: true
+
+tutorial_book:
+  enabled: true

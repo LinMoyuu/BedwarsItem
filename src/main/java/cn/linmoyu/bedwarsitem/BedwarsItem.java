@@ -1,10 +1,7 @@
 package cn.linmoyu.bedwarsitem;
 
 import cn.linmoyu.bedwarsitem.entities.*;
-import cn.linmoyu.bedwarsitem.items.BridgeEgg;
-import cn.linmoyu.bedwarsitem.items.ExplosionProof;
-import cn.linmoyu.bedwarsitem.items.FireBall;
-import cn.linmoyu.bedwarsitem.items.TNT;
+import cn.linmoyu.bedwarsitem.items.*;
 import lombok.Getter;
 import me.ram.bedwarsscoreboardaddon.Main;
 import me.ram.bedwarsscoreboardaddon.utils.ColorUtil;
@@ -28,6 +25,7 @@ public final class BedwarsItem extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(new ExplosionProof(), this);
         Bukkit.getPluginManager().registerEvents(new FireBall(), this);
         Bukkit.getPluginManager().registerEvents(new TNT(), this);
+        Bukkit.getPluginManager().registerEvents(new TutorialBook(), this);
 
         Bukkit.getPluginManager().registerEvents(new SilverFishSpawner(), this);
         Bukkit.getPluginManager().registerEvents(new SkeletonSpawner(), this);
