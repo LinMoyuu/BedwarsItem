@@ -6,7 +6,9 @@ import cn.linmoyu.bedwarsitem.utils.TakeItemUtil;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.game.GameState;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
@@ -16,9 +18,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.projectiles.ProjectileSource;
 
 // 没能仿明白
 public class FireBall implements Listener {
@@ -61,6 +65,16 @@ public class FireBall implements Listener {
         if (entity instanceof Fireball && entity.hasMetadata("FireBall")) {
             e.setCancelled(true);
         }
+    }
+
+    @EventHandler
+    public void onFireballExplode(EntityExplodeEvent event) {
+        if (!(event.getEntity() instanceof Fireball)) return;
+
+        ProjectileSource projectileSource = ((Fireball) event.getEntity()).getShooter();
+        if (!(projectileSource instanceof Player)) return;
+
+        event.blockList().clear();
     }
 
     @EventHandler
