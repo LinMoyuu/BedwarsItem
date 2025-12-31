@@ -37,11 +37,6 @@ public class EventListener implements Listener {
         if (!EntityUtils.isGameEntity(entity)) {
             return;
         }
-        EntityDamageEvent.DamageCause damageCause = event.getCause();
-        if (damageCause != null && damageCause.toString().startsWith("ENTITY")) {
-            event.setCancelled(false);
-            return;
-        }
         Player player = EntityUtils.getPlayer(damager);
         if (player == null) {
             return;

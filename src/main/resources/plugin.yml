@@ -10,7 +10,6 @@ depend:
 commands:
   bedwarsitem:
     aliases: bwitem
-    description: 在第二岛屿生成僵尸
     usage: /<command>
   spawnzombies:
     description: 在第二岛屿生成僵尸

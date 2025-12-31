@@ -6,6 +6,8 @@ import cn.linmoyu.bedwarsitem.utils.Utils;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.game.GameState;
+import io.github.bedwarsrel.game.Team;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -33,8 +35,6 @@ public class TNT implements Listener {
             return;
         }
 
-        if (!Utils.isCanPlace(game, e.getBlock().getLocation())) return;
-
         e.getBlock().setType(Material.AIR);
         TNTPrimed tnt = e.getBlock().getLocation().getWorld().spawn(e.getBlock().getLocation().add(0.5, 0, 0.5), TNTPrimed.class);
         tnt.setYield(Config.tnt_yield);
@@ -61,6 +61,18 @@ public class TNT implements Listener {
         }
         if (game.isSpectator(player) || !game.getPlayers().contains(player)) {
             return;
+        }
+        String metadata = damager.getMetadata("LightTNT").get(0).asString();
+        String[] data = metadata.split("\\.");
+        String playerName = data[1];
+        Player placedPlayer = Bukkit.getPlayer(playerName);
+        if (placedPlayer != null) {
+            Team playerTeam = game.getPlayerTeam(player);
+            Team placedPlayerTeam = game.getPlayerTeam(placedPlayer);
+            if (placedPlayerTeam != null && playerTeam == placedPlayerTeam) {
+                e.setCancelled(true);
+                return;
+            }
         }
         e.setDamage(Config.tnt_damage);
     }
