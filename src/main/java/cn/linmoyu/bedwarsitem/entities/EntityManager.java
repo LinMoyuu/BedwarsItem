@@ -17,9 +17,8 @@ import java.util.*;
 
 public final class EntityManager implements Listener {
 
-    private static final Map<Entity, PetData> pets = new HashMap<>();
     public static final List<Entity> monsterList = new ArrayList<>();
-
+    private static final Map<Entity, PetData> pets = new HashMap<>();
     private static BukkitTask teleportPetsTask;
     private static BukkitTask targetPlayerTask;
 
@@ -154,6 +153,11 @@ public final class EntityManager implements Listener {
         }
     }
 
+    @EventHandler
+    public void onDeath(EntityDeathEvent event) {
+        removeEntity(event.getEntity());
+    }
+
     /**
      * 内部数据类，封装宠物信息。保持 private 以实现良好封装。
      */
@@ -166,10 +170,5 @@ public final class EntityManager implements Listener {
             this.spawner = spawner;
             this.game = game;
         }
-    }
-
-    @EventHandler
-    public void onDeath(EntityDeathEvent event) {
-        removeEntity(event.getEntity());
     }
 }

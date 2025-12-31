@@ -2,7 +2,6 @@ package cn.linmoyu.bedwarsitem.items;
 
 import cn.linmoyu.bedwarsitem.BedwarsItem;
 import cn.linmoyu.bedwarsitem.Config;
-import cn.linmoyu.bedwarsitem.utils.Utils;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.game.GameState;
@@ -41,7 +40,6 @@ public class TNT implements Listener {
         tnt.setIsIncendiary(false);
         tnt.setFuseTicks(Config.tnt_fuse_ticks);
         tnt.setMetadata("LightTNT", new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + "." + player.getName()));
-
     }
 
     @EventHandler

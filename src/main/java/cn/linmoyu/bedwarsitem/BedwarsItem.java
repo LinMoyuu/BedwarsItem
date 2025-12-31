@@ -11,9 +11,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class BedwarsItem extends JavaPlugin implements Listener {
 
+    public static String aboutMessage;
     @Getter
     private static BedwarsItem instance;
-    public static String aboutMessage;
+
     @Override
     public void onEnable() {
         // Plugin startup logic

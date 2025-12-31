@@ -14,16 +14,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- reward:
- - type: GLASS
- meta:
- ==: ItemMeta
- meta-type: UNSPECIFIC
- display-name: "§c防爆玻璃"
- lore:
- - "§7TNT无法炸破"
- - "§7但是又很容易被拆掉"
- - "§7ps:他并不能保护别的方块被炸"
+ * reward:
+ * - type: GLASS
+ * meta:
+ * ==: ItemMeta
+ * meta-type: UNSPECIFIC
+ * display-name: "§c防爆玻璃"
+ * lore:
+ * - "§7TNT无法炸破"
+ * - "§7但是又很容易被拆掉"
+ * - "§7ps:他并不能保护别的方块被炸"
  */
 
 public class ExplosionProof implements Listener {
