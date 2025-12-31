@@ -9,6 +9,7 @@ import io.github.bedwarsrel.game.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
@@ -35,7 +36,8 @@ public class TNT implements Listener {
         }
 
         e.getBlock().setType(Material.AIR);
-        TNTPrimed tnt = e.getBlock().getLocation().getWorld().spawn(e.getBlock().getLocation().add(0.5, 0, 0.5), TNTPrimed.class);
+//        TNTPrimed tnt = e.getBlock().getLocation().getWorld().spawn(e.getBlock().getLocation().add(0.5, 0, 0.5), TNTPrimed.class);
+        TNTPrimed tnt = (TNTPrimed) player.getWorld().spawnEntity(e.getBlock().getLocation(), EntityType.PRIMED_TNT);
         tnt.setYield(Config.tnt_yield);
         tnt.setIsIncendiary(false);
         tnt.setFuseTicks(Config.tnt_fuse_ticks);
@@ -72,6 +74,13 @@ public class TNT implements Listener {
                 return;
             }
         }
-        e.setDamage(Config.tnt_damage);
+        TNTPrimed tnt = (TNTPrimed) damager;
+        double distance = player.getLocation().distance(tnt.getLocation());
+
+        if (distance <= 1.0) {
+            e.setDamage(25.0);
+        } else {
+            e.setDamage(Config.tnt_damage);
+        }
     }
 }
