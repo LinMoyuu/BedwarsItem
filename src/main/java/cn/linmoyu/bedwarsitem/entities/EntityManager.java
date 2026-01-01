@@ -59,6 +59,10 @@ public final class EntityManager implements Listener {
 
         pets.put(petEntity, new PetData(spawner, game));
         startTasks();
+        Player target = EntityUtils.findNearestEnemy(petEntity, spawner);
+        if (petEntity instanceof Creature) {
+            ((Creature) petEntity).setTarget(target);
+        }
 
         if (petEntity instanceof Skeleton) {
             new BukkitRunnable() {
