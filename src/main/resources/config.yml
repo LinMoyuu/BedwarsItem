@@ -4,6 +4,9 @@ bridge_egg:
   enabled: true
   # 保留空即不判断名字，不要带颜色符号。
   name: "搭桥蛋"
+  # 1为BWIA原版样式
+  # 2为类花雨庭样式，是AIGC，有缺漏(比如斜扔的最后几个方块)
+  mode: 2
   max_blocks: 50
 
 explosion_proof:

@@ -11,6 +11,7 @@ public class Config {
     public static boolean explosion_proof_enabled;
     public static boolean bridge_egg_enabled;
     public static String bridge_egg_name;
+    public static int bridge_egg_mode;
     public static int bridge_egg_max_blocks;
     public static boolean fireball_enabled;
     public static float fireball_yield;
@@ -40,6 +41,7 @@ public class Config {
         explosion_proof_enabled = config.getBoolean("explosion_proof.enabled");
         bridge_egg_enabled = config.getBoolean("bridge_egg.enabled");
         bridge_egg_name = config.getString("bridge_egg.name");
+        bridge_egg_mode = config.getInt("bridge_egg.mode");
         bridge_egg_max_blocks = config.getInt("bridge_egg.max_blocks");
         fireball_enabled = config.getBoolean("fireball.enabled");
         fireball_yield = (float) config.getDouble("fireball.yield");
