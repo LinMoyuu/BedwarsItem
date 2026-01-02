@@ -13,10 +13,7 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 public class EventListener implements Listener {
@@ -26,6 +23,33 @@ public class EventListener implements Listener {
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         if (event.isCancelled() && (event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CUSTOM || event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.SPAWNER_EGG)) {
             event.setCancelled(false);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onTargetPlayer(EntityTargetLivingEntityEvent event) {
+        Entity entity = event.getEntity();
+        if (!EntityUtils.isGameEntity(entity)) {
+            return;
+        }
+        if (!(event.getTarget() instanceof Player)) {
+            return;
+        }
+        Player player = (Player) event.getTarget();
+        if (player == null) {
+            return;
+        }
+        Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(player);
+        if (game == null) return;
+        Player spawner = EntityUtils.getSpawner(entity);
+        // 默认为僵尸、猪人
+        if (spawner == null) {
+            return;
+        }
+        Team spawnerTeam = game.getPlayerTeam(spawner);
+        Team playerTeam = game.getPlayerTeam(player);
+        if (game.isSpectator(player) || player.getGameMode() == GameMode.SPECTATOR || spawner == player || spawnerTeam == null || playerTeam == null || spawnerTeam == playerTeam) {
+            event.setCancelled(true);
         }
     }
 
