@@ -20,10 +20,11 @@
 > 本项目有许多直接复制粘贴的引用。仅经过部分修改，来源如下：
 
 - [BridgeEgg.java](https://github.com/TheRamU/BedwarsItemAddon/blob/main/src/main/java/me/ram/bedwarsitemaddon/items/BridgeEgg.java)
+- [ExplosionProof.java](https://github.com/TheRamU/BedwarsItemAddon/blob/main/src/main/java/me/ram/bedwarsitemaddon/items/ExplosionProof.java)
 - [FireBall.java](https://github.com/TheRamU/BedwarsItemAddon/blob/main/src/main/java/me/ram/bedwarsitemaddon/items/FireBall.java)
 - [LightTNT.java](https://github.com/TheRamU/BedwarsItemAddon/blob/main/src/main/java/me/ram/bedwarsitemaddon/items/LightTNT.java)
-- [ExplosionProof.java](https://github.com/TheRamU/BedwarsItemAddon/blob/main/src/main/java/me/ram/bedwarsitemaddon/items/ExplosionProof.java)
 - [LocationUtil.java](https://github.com/TheRamU/BedwarsItemAddon/blob/main/src/main/java/me/ram/bedwarsitemaddon/utils/LocationUtil.java)
-- [NoAIUtils.java](https://github.com/SakuraKoi/BridgingAnalyzer/blob/master/src/sakura/kooi/BridgingAnalyzer/utils/NoAIUtils.java)
 - [TakeItemUtil.java](https://github.com/TheRamU/BedwarsItemAddon/blob/main/src/main/java/me/ram/bedwarsitemaddon/utils/TakeItemUtil.java)
+
+火球直线修复：https://hypixel.net/threads/shooting-fireballs-without-offset.1758017/
 

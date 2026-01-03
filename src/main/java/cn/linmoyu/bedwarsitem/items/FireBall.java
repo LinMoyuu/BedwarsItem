@@ -2,6 +2,7 @@ package cn.linmoyu.bedwarsitem.items;
 
 import cn.linmoyu.bedwarsitem.BedwarsItem;
 import cn.linmoyu.bedwarsitem.Config;
+import cn.linmoyu.bedwarsitem.utils.FireballUtil;
 import cn.linmoyu.bedwarsitem.utils.TakeItemUtil;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
@@ -21,6 +22,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.projectiles.ProjectileSource;
+import org.bukkit.util.Vector;
 
 // 没能仿明白
 public class FireBall implements Listener {
@@ -48,10 +50,13 @@ public class FireBall implements Listener {
             return;
         }
 
+        Vector direction = player.getEyeLocation().getDirection();
         Fireball fireball = player.launchProjectile(Fireball.class);
+        FireballUtil.setDirection(fireball, direction);
         fireball.setBounce(false);
         fireball.setShooter(player);
         fireball.setYield(Config.fireball_yield);
+        fireball.setIsIncendiary(false);
         fireball.setVelocity(fireball.getDirection().multiply(Config.fireball_velocity));
         fireball.setMetadata("FireBall", new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + "." + player.getName()));
         TakeItemUtil.TakeItem(player, handItem);
@@ -95,4 +100,6 @@ public class FireBall implements Listener {
         }
         e.setDamage(Config.fireball_damage);
     }
+
+
 }
