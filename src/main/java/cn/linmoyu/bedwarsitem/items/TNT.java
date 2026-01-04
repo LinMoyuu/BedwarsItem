@@ -37,7 +37,7 @@ public class TNT implements Listener {
 
         e.getBlock().setType(Material.AIR);
 //        TNTPrimed tnt = e.getBlock().getLocation().getWorld().spawn(e.getBlock().getLocation().add(0.5, 0, 0.5), TNTPrimed.class);
-        TNTPrimed tnt = (TNTPrimed) player.getWorld().spawnEntity(e.getBlock().getLocation(), EntityType.PRIMED_TNT);
+        TNTPrimed tnt = (TNTPrimed) player.getWorld().spawnEntity(e.getBlock().getLocation().add(0.5, 0, 0.5), EntityType.PRIMED_TNT);
         tnt.setYield(Config.tnt_yield);
         tnt.setIsIncendiary(false);
         tnt.setFuseTicks(Config.tnt_fuse_ticks);
