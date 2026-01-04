@@ -35,7 +35,7 @@ public class HuaYuTing implements SetBlock {
                 Location loc = egg.getLocation();
                 Location groundLoc = loc.clone().subtract(0.0, 2.0, 0.0);
 
-                if (player.getLocation().distance(loc) > 1.0D) {
+                if (player.getLocation().distance(loc) > 2.0D) {
                     // 检查是否已达到方块上限
                     if (placedBlockCount[0] >= Config.bridge_egg_max_blocks) {
                         this.cancel();
