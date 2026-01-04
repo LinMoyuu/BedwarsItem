@@ -22,7 +22,7 @@ tnt:
   enabled: true
   yield: 3
   fuse_ticks: 80
-  damage: 3.0
+  damage: 4.0
 
 # 生成点数量
 res_spawner:
@@ -35,7 +35,7 @@ spawner:
   spider: true
   wolf: true
   task:
-    teleport_owner_interval: 20
+    teleport_owner_interval: 200
     target_enemy_interval: 200
     max_distance_teleport: 20.0
 
