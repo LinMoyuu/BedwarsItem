@@ -36,12 +36,25 @@ public class ExplosionProof implements Listener {
         if (game == null) {
             return;
         }
+
         List<Block> block_list = new ArrayList<>();
-        for (Block block : e.blockList()) {
-            if (block.getType().equals(Material.GLASS) || block.getType().equals(Material.STAINED_GLASS) || !game.getRegion().isPlacedBlock(block)) {
-                continue;
+        if (e.getEntity().hasMetadata("LightTNT")) {
+            for (Block block : e.blockList()) {
+                if (block.getType().equals(Material.GLASS) ||
+                        block.getType().equals(Material.STAINED_GLASS) ||
+                        !game.getRegion().isPlacedBlock(block)) {
+                    continue;
+                }
+                block_list.add(block);
             }
-            block_list.add(block);
+        } else {
+            for (Block block : e.blockList()) {
+                if (block.getType().equals(Material.GLASS) ||
+                        block.getType().equals(Material.STAINED_GLASS)) {
+                    continue;
+                }
+                block_list.add(block); 
+            }
         }
         e.blockList().clear();
         e.blockList().addAll(block_list);
