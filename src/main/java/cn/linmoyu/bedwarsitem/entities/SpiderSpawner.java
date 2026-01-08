@@ -53,10 +53,6 @@ public class SpiderSpawner implements Listener {
     private void spawnSpider(Game game, Location location, Player spawner) {
         Spider spider = (Spider) location.getWorld().spawnEntity(location, EntityType.SPIDER);
 
-        // 设置自定义属性
-        spider.setCustomName("§a§l[" + spawner.getDisplayName() + "§a§l] §b§l的宠物");
-        spider.setRemoveWhenFarAway(false);
-
         EntityManager.addPet(spider, game, spawner);
     }
 

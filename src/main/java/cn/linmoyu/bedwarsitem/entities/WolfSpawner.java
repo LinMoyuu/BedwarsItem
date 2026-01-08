@@ -54,8 +54,6 @@ public class WolfSpawner implements Listener {
         Wolf wolf = (Wolf) location.getWorld().spawnEntity(location, EntityType.WOLF);
 
         // 设置自定义属性
-        wolf.setCustomName("§a§l[" + spawner.getDisplayName() + "§a§l] §b§l的宠物");
-        wolf.setRemoveWhenFarAway(false);
         wolf.setOwner(spawner);
         wolf.setTamed(true);
 

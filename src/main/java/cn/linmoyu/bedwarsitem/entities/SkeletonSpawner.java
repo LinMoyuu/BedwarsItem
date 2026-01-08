@@ -52,11 +52,8 @@ public class SkeletonSpawner implements Listener {
 
     private void spawnSkeleton(Game game, Location location, Player spawner) {
         Skeleton skeleton = (Skeleton) location.getWorld().spawnEntity(location, EntityType.SKELETON);
-        skeleton.getEquipment().setItemInHandDropChance(0.0f); // 不掉落
 
         // 设置自定义属性
-        skeleton.setCustomName("§a§l[" + spawner.getDisplayName() + "§a§l] §b§l的宠物");
-        skeleton.setRemoveWhenFarAway(false);
         skeleton.setFireTicks(0);
 
         EntityManager.addPet(skeleton, game, spawner);

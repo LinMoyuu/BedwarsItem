@@ -55,11 +55,6 @@ public class SilverFishSpawner implements Listener {
     private void spawnSilverfish(Game game, Location location, Player spawner) {
         Silverfish silverfish = (Silverfish) location.getWorld().spawnEntity(location, EntityType.SILVERFISH);
 
-        // 设置自定义属性
-        silverfish.setCustomName("§a§l[" + spawner.getDisplayName() + "§a§l] §b§l的宠物");
-//        silverfish.setCustomNameVisible(true);
-        silverfish.setRemoveWhenFarAway(false);
-
         EntityManager.addPet(silverfish, game, spawner);
     }
 
