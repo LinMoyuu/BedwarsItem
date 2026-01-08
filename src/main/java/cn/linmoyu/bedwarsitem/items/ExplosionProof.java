@@ -6,6 +6,7 @@ import io.github.bedwarsrel.game.Game;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityExplodeEvent;
@@ -31,6 +32,7 @@ public class ExplosionProof implements Listener {
     @EventHandler
     public void onExplode(EntityExplodeEvent e) {
         if (!Config.explosion_proof_enabled) return;
+        if (!(e.getEntity() instanceof TNT) && !(e.getEntity() instanceof TNTPrimed)) return;
         Location location = e.getEntity().getLocation().getBlock().getLocation().add(0.5, 0.5, 0.5);
         Game game = BedwarsRel.getInstance().getGameManager().getGameByLocation(location);
         if (game == null) {
