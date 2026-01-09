@@ -91,8 +91,19 @@ public final class EntityManager implements Listener {
     }
 
     public static void addMonster(Entity monsterEntity, Game game) {
-        if (!monsterList.contains(monsterEntity)) {
-            monsterList.add(monsterEntity);
+        if (monsterList.contains(monsterEntity)) return;
+        monsterList.add(monsterEntity);
+        if (monsterEntity instanceof Zombie) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (monsterEntity.isDead() || !monsterEntity.isValid()) {
+                        this.cancel();
+                        return;
+                    }
+                    monsterEntity.setFireTicks(0);
+                }
+            }.runTaskTimer(BedwarsItem.getInstance(), 0L, 0L);
         }
     }
 
