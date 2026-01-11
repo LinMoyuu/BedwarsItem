@@ -24,7 +24,7 @@ public final class BedwarsItem extends JavaPlugin implements Listener {
         // Plugin startup logic
         instance = this;
         Config.setupConfig(this);
-        aboutMessage = ColorUtil.color("§f* This server is running §bBedwarsItem Plugin§f. \n§f* By §b@YukiEnd §f| §bLinMoyu_ §7v" + Main.getInstance().getDescription().getVersion());
+        aboutMessage = ColorUtil.color("§f* This server is running §bBedwarsItem Plugin§f. \n§f* By §b@YukiEnd §f| §bLinMoyu_ §7v" + getDescription().getVersion());
         Bukkit.getPluginManager().registerEvents(new EventListener(), this);
         Bukkit.getPluginManager().registerEvents(new BridgeEgg(), this);
         Bukkit.getPluginManager().registerEvents(new ExplosionProof(), this);
