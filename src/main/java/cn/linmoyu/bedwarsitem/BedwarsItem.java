@@ -1,13 +1,14 @@
 package cn.linmoyu.bedwarsitem;
 
-import cn.linmoyu.bedwarsitem.entities.*;
+import cn.linmoyu.bedwarsitem.entities.SpawnEggsListener;
+import cn.linmoyu.bedwarsitem.entities.SpawnPigZombiesCommand;
+import cn.linmoyu.bedwarsitem.entities.SpawnZombiesCommand;
 import cn.linmoyu.bedwarsitem.items.ExplosionProof;
 import cn.linmoyu.bedwarsitem.items.FireBall;
 import cn.linmoyu.bedwarsitem.items.TNT;
 import cn.linmoyu.bedwarsitem.items.TutorialBook;
 import cn.linmoyu.bedwarsitem.items.bridgeegg.BridgeEgg;
 import lombok.Getter;
-import me.ram.bedwarsscoreboardaddon.Main;
 import me.ram.bedwarsscoreboardaddon.utils.ColorUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
@@ -31,11 +32,7 @@ public final class BedwarsItem extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(new FireBall(), this);
         Bukkit.getPluginManager().registerEvents(new TNT(), this);
         Bukkit.getPluginManager().registerEvents(new TutorialBook(), this);
-
-        Bukkit.getPluginManager().registerEvents(new SilverFishSpawner(), this);
-        Bukkit.getPluginManager().registerEvents(new SkeletonSpawner(), this);
-        Bukkit.getPluginManager().registerEvents(new SpiderSpawner(), this);
-        Bukkit.getPluginManager().registerEvents(new WolfSpawner(), this);
+        Bukkit.getPluginManager().registerEvents(new SpawnEggsListener(), this);
 
         getCommand("bedwarsitem").setExecutor(new MainCommand());
         getCommand("bwitem").setExecutor(new MainCommand());
