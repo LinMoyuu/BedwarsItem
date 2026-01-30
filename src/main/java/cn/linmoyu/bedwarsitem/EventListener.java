@@ -48,7 +48,11 @@ public class EventListener implements Listener {
         }
         Team spawnerTeam = game.getPlayerTeam(spawner);
         Team playerTeam = game.getPlayerTeam(player);
-        if (game.isSpectator(player) || player.getGameMode() == GameMode.SPECTATOR || spawner == player || spawnerTeam == null || playerTeam == null || spawnerTeam == playerTeam) {
+
+        Entity target = EntityUtils.findNearestEnemy(entity, spawner);
+        if (target != null) {
+            event.setTarget(target);
+        } else if (game.isSpectator(player) || player.getGameMode() == GameMode.SPECTATOR || spawner == player || spawnerTeam == null || playerTeam == null || spawnerTeam == playerTeam) {
             event.setCancelled(true);
         }
     }
