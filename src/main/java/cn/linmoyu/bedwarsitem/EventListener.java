@@ -134,11 +134,17 @@ public class EventListener implements Listener {
         // 死亡消息
         // 狼设置主人后 原版会有死亡消息 这里略过不做处理
         if (entity.getType() == EntityType.WOLF) return;
+        // 仅为主人发送击杀消息 所以主人为空直接省略后续...
+        Player spawner = EntityUtils.getSpawner(entity);
+        if (spawner == null) {
+            return;
+        }
         EntityDamageEvent damageEvent = entity.getLastDamageCause();
         EntityDamageEvent.DamageCause cause = null;
         if (damageEvent != null) {
             cause = damageEvent.getCause();
         }
+        // 待改进 花雨庭是走的原版逻辑 未知实现方式
         String deathCause = "死了";
         if (cause != null) {
             switch (cause) {
@@ -166,13 +172,9 @@ public class EventListener implements Listener {
             }
         }
         Player killer = event.getEntity().getKiller();
-        Player spawner = EntityUtils.getSpawner(entity);
         String deathMessage = entity.getCustomName() + "§f" + deathCause;
         if (killer != null) {
-            deathMessage = entity.getCustomName() + "§f" + killer.getDisplayName() + deathCause;
-        }
-        if (spawner == null) {
-            return;
+            deathMessage = entity.getCustomName() + "§f被" + killer.getDisplayName() + deathCause;
         }
         Game game = EntityUtils.getPetGame(entity);
         if (game != null) {
