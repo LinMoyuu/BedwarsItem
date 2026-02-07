@@ -64,6 +64,7 @@ public class TNT implements Listener {
         }
         String metadata = damager.getMetadata("LightTNT").get(0).asString();
         String[] data = metadata.split("\\.");
+        if (data.length > 2) return;
         String playerName = data[1];
         Player placedPlayer = Bukkit.getPlayer(playerName);
         if (placedPlayer != null) {

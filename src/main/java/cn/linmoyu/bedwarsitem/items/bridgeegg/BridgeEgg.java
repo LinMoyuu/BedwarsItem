@@ -40,7 +40,6 @@ public class BridgeEgg implements Listener {
         return block.getType() == new ItemStack(Material.AIR).getType() &&
                 !block.equals(player.getLocation().getBlock()) &&
                 !block.equals(player.getLocation().clone().add(0, 1, 0).getBlock())
-                && game.getRegion().isInRegion(location)
                 && Utils.isCanPlace(game, location);
     }
 
