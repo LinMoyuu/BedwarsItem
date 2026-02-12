@@ -24,6 +24,9 @@ public class Config {
     public static float tnt_yield;
     public static int tnt_fuse_ticks;
     public static int tnt_damage;
+    public static boolean tnt_killable_enabled;
+    public static double tnt_killable_distance;
+    public static boolean tnt_offsetfix;
     public static boolean tutorial_book_enabled;
     public static boolean silverfish_spawner_enabled;
     public static boolean skeleton_spawner_enabled;
@@ -55,6 +58,9 @@ public class Config {
         tnt_yield = (float) config.getDouble("tnt.yield");
         tnt_fuse_ticks = config.getInt("tnt.fuse_ticks");
         tnt_damage = config.getInt("tnt.damage");
+        tnt_killable_enabled = config.getBoolean("tnt.killable.enabled");
+        tnt_killable_distance = config.getDouble("tnt.killable.distance");
+        tnt_offsetfix = config.getBoolean("tnt.offsetfix");
         tutorial_book_enabled = config.getBoolean("tutorial_book.enabled");
         silverfish_spawner_enabled = config.getBoolean("spawner.silverfish");
         skeleton_spawner_enabled = config.getBoolean("spawner.skeleton");

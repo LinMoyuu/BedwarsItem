@@ -103,8 +103,8 @@ public class FireBall implements Listener {
         String metadata = damager.getMetadata("FireBall").get(0).asString();
         String[] data = metadata.split("\\.");
         if (data.length > 2) return;
-        String playerName = data[1];
-        Player placedPlayer = Bukkit.getPlayer(playerName);
+        String shooterName = data[1];
+        Player placedPlayer = Bukkit.getPlayer(shooterName);
         if (placedPlayer != null) {
             Team playerTeam = game.getPlayerTeam(player);
             Team placedPlayerTeam = game.getPlayerTeam(placedPlayer);

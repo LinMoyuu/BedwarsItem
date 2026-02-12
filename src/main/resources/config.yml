@@ -23,6 +23,12 @@ tnt:
   yield: 3
   fuse_ticks: 80
   damage: 4.0
+  # 玩家被秒杀
+  killable:
+    enabled: true
+    distance: 1.0
+  # 是的 花雨庭就连TNT放置坐标都有多种多样...
+  offsetfix: false
 
 # 生成点数量
 res_spawner:

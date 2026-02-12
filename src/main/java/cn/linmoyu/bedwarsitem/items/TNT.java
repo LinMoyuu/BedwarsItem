@@ -37,7 +37,13 @@ public class TNT implements Listener {
 
         e.getBlock().setType(Material.AIR);
 //        TNTPrimed tnt = e.getBlock().getLocation().getWorld().spawn(e.getBlock().getLocation().add(0.5, 0, 0.5), TNTPrimed.class);
-        TNTPrimed tnt = (TNTPrimed) player.getWorld().spawnEntity(e.getBlock().getLocation().add(0.5, 0, 0.5), EntityType.PRIMED_TNT);
+        TNTPrimed tnt;
+        if (Config.tnt_offsetfix) {
+            tnt = (TNTPrimed) player.getWorld().spawnEntity(e.getBlock().getLocation().add(0.5, 0, 0.5), EntityType.PRIMED_TNT);
+        } else {
+            tnt = (TNTPrimed) player.getWorld().spawnEntity(e.getBlock().getLocation(), EntityType.PRIMED_TNT);
+        }
+        if (tnt == null) return;
         tnt.setYield(Config.tnt_yield);
         tnt.setIsIncendiary(false);
         tnt.setFuseTicks(Config.tnt_fuse_ticks);
@@ -65,8 +71,8 @@ public class TNT implements Listener {
         String metadata = damager.getMetadata("LightTNT").get(0).asString();
         String[] data = metadata.split("\\.");
         if (data.length > 2) return;
-        String playerName = data[1];
-        Player placedPlayer = Bukkit.getPlayer(playerName);
+        String placedPlayerName = data[1];
+        Player placedPlayer = Bukkit.getPlayer(placedPlayerName);
         if (placedPlayer != null) {
             Team playerTeam = game.getPlayerTeam(player);
             Team placedPlayerTeam = game.getPlayerTeam(placedPlayer);
@@ -78,8 +84,12 @@ public class TNT implements Listener {
         TNTPrimed tnt = (TNTPrimed) damager;
         double distance = player.getLocation().distance(tnt.getLocation());
 
-        if (distance <= 1.0) {
-            e.setDamage(25.0);
+        if (Config.debug) {
+            BedwarsItem.getInstance().getLogger().info(player.getName() + " 距离TNT: " + distance);
+            BedwarsItem.getInstance().getLogger().info("秒杀启用: " + Config.tnt_killable_enabled + " 设定距离: " + Config.tnt_killable_distance);
+        }
+        if (Config.tnt_killable_enabled && distance <= Config.tnt_killable_distance) {
+            player.setHealth(0);
         } else {
             e.setDamage(Config.tnt_damage);
         }
