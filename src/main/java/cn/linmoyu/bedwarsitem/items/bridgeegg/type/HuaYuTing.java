@@ -4,6 +4,7 @@ import cn.linmoyu.bedwarsitem.BedwarsItem;
 import cn.linmoyu.bedwarsitem.Config;
 import cn.linmoyu.bedwarsitem.items.bridgeegg.BridgeEgg;
 import cn.linmoyu.bedwarsitem.items.bridgeegg.SetBlock;
+import cn.linmoyu.bedwarsitem.utils.Utils;
 import io.github.bedwarsrel.game.Game;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -34,6 +35,12 @@ public class HuaYuTing implements SetBlock {
 
                 Location loc = egg.getLocation();
                 Location groundLoc = loc.clone().subtract(0.0, 2.0, 0.0);
+                if (Utils.isProtectionLocation(game, loc)) {
+                    player.sendMessage(Config.bwrelPrefix + "§a搭桥蛋进入出生点范围，已被移除!");
+                    egg.remove();
+                    this.cancel();
+                    return;
+                }
 
                 if (player.getLocation().distance(loc) > 2.0D) {
                     // 检查是否已达到方块上限

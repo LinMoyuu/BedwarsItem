@@ -1,11 +1,14 @@
 package cn.linmoyu.bedwarsitem;
 
+import io.github.bedwarsrel.BedwarsRel;
+import me.ram.bedwarsscoreboardaddon.utils.ColorUtil;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
 public class Config {
 
     public static boolean debug;
+    public static String bwrelPrefix;
     public static int spawner_zombies_count;
     public static int spawner_pigzombies_count;
     public static boolean explosion_proof_enabled;
@@ -36,6 +39,7 @@ public class Config {
 
         FileConfiguration config = plugin.getConfig();
         debug = config.getBoolean("debug");
+        bwrelPrefix = ColorUtil.color(BedwarsRel.getInstance().getConfig().getString("chat-prefix") + " ");
         spawner_zombies_count = config.getInt("res_spawner.zombies");
         spawner_pigzombies_count = config.getInt("res_spawner.pigzombies");
         explosion_proof_enabled = config.getBoolean("explosion_proof.enabled");
