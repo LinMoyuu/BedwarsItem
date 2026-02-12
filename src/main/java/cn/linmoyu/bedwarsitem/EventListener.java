@@ -61,30 +61,38 @@ public class EventListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerAttackMonster(EntityDamageByEntityEvent event) {
         Entity entity = event.getEntity();
-        Entity damager = event.getDamager();
         if (!EntityUtils.isGameEntity(entity)) {
-            return;
-        }
-        Player player = EntityUtils.getPlayer(damager);
-        if (player == null) {
-            return;
-        }
-        Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(player);
-        if (game == null) return;
-        Player spawner = EntityUtils.getSpawner(entity);
-        // 默认为僵尸、猪人
-        if (spawner == null) {
-            event.setCancelled(false);
-            return;
-        }
-        Team spawnerTeam = game.getPlayerTeam(spawner);
-        Team playerTeam = game.getPlayerTeam(player);
-        if (game.isSpectator(player) || player.getGameMode() == GameMode.SPECTATOR || spawner == player || spawnerTeam == null || playerTeam == null || spawnerTeam == playerTeam) {
-            event.setCancelled(true);
             return;
         }
         event.setCancelled(false);
     }
+//    @EventHandler(priority = EventPriority.HIGHEST)
+//    public void onPlayerAttackMonster(EntityDamageByEntityEvent event) {
+//        Entity entity = event.getEntity();
+//        Entity damager = event.getDamager();
+//        if (!EntityUtils.isGameEntity(entity)) {
+//            return;
+//        }
+//        Player player = EntityUtils.getPlayer(damager);
+//        if (player == null) {
+//            return;
+//        }
+//        Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(player);
+//        if (game == null) return;
+//        Player spawner = EntityUtils.getSpawner(entity);
+//        // 默认为僵尸、猪人
+//        if (spawner == null) {
+//            event.setCancelled(false);
+//            return;
+//        }
+//        Team spawnerTeam = game.getPlayerTeam(spawner);
+//        Team playerTeam = game.getPlayerTeam(player);
+//        if (game.isSpectator(player) || player.getGameMode() == GameMode.SPECTATOR || spawner == player || spawnerTeam == null || playerTeam == null || spawnerTeam == playerTeam) {
+//            event.setCancelled(true);
+//            return;
+//        }
+//        event.setCancelled(false);
+//    }
 
     // 用于生物攻击玩家
     @EventHandler(priority = EventPriority.HIGHEST)
