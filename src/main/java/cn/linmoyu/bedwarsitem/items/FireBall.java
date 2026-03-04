@@ -4,11 +4,11 @@ import cn.linmoyu.bedwarsitem.BedwarsItem;
 import cn.linmoyu.bedwarsitem.Config;
 import cn.linmoyu.bedwarsitem.utils.FireballUtil;
 import cn.linmoyu.bedwarsitem.utils.TakeItemUtil;
+import cn.linmoyu.bedwarsitem.utils.Utils;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.game.GameState;
 import io.github.bedwarsrel.game.Team;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Fireball;
@@ -100,11 +100,7 @@ public class FireBall implements Listener {
         if (game.getState() != GameState.RUNNING) {
             return;
         }
-        String metadata = damager.getMetadata("FireBall").get(0).asString();
-        String[] data = metadata.split("\\.");
-        if (data.length > 2) return;
-        String shooterName = data[1];
-        Player placedPlayer = Bukkit.getPlayer(shooterName);
+        Player placedPlayer = Utils.getPlacedPlayer(damager, "FireBall");
         if (placedPlayer != null) {
             Team playerTeam = game.getPlayerTeam(player);
             Team placedPlayerTeam = game.getPlayerTeam(placedPlayer);

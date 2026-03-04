@@ -1,5 +1,7 @@
 package cn.linmoyu.bedwarsitem.utils;
 
+import cn.linmoyu.bedwarsitem.BedwarsItem;
+import cn.linmoyu.bedwarsitem.Config;
 import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.game.Team;
 import me.ram.bedwarsscoreboardaddon.utils.BedwarsUtil;
@@ -53,5 +55,20 @@ public class Utils {
                 return null;
             }
         }
+    }
+
+    public static boolean debug(String string) {
+        if (!Config.debug) return false;
+        BedwarsItem.getInstance().getLogger().info("[DEBUG] " + string);
+        return true;
+    }
+
+    public static Player getPlacedPlayer(Entity entity, String metaData) {
+        String metadata = entity.getMetadata(metaData).get(0).asString();
+        String[] data = metadata.split("\\.");
+        if (data.length > 2) return null;
+        String shooterName = data[1];
+
+        return Bukkit.getPlayer(shooterName);
     }
 }

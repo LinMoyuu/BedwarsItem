@@ -59,11 +59,15 @@ public final class EntityManager implements Listener {
 
         pets.put(petEntity, new PetData(spawner, game));
         startTasks();
-        Player target = EntityUtils.findNearestEnemy(petEntity, spawner);
         petEntity.setCustomName("§a§l[" + spawner.getDisplayName() + "§a§l] §b§l的宠物");
         if (petEntity instanceof Creature) {
+            Player target = EntityUtils.findNearestEnemy(petEntity, spawner);
             ((Creature) petEntity).setTarget(target);
             ((Creature) petEntity).setRemoveWhenFarAway(false);
+        }
+        if (petEntity instanceof Wolf) {
+            ((Wolf) petEntity).setOwner(spawner);
+            ((Wolf) petEntity).setTamed(true);
         }
 
         if (petEntity instanceof Skeleton) {

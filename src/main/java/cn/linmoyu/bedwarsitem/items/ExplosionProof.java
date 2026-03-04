@@ -38,25 +38,21 @@ public class ExplosionProof implements Listener {
         if (game == null) {
             return;
         }
+        boolean isLightTNT = e.getEntity().hasMetadata("LightTNT");
 
         List<Block> block_list = new ArrayList<>();
-        if (e.getEntity().hasMetadata("LightTNT")) {
-            for (Block block : e.blockList()) {
-                if (block.getType().equals(Material.GLASS) ||
-                        block.getType().equals(Material.STAINED_GLASS) ||
-                        !game.getRegion().isPlacedBlock(block)) {
-                    continue;
-                }
-                block_list.add(block);
+        for (Block block : e.blockList()) {
+            // 防爆玻璃略过
+            if (block.getType().equals(Material.GLASS) ||
+                    block.getType().equals(Material.STAINED_GLASS)) {
+                continue;
             }
-        } else {
-            for (Block block : e.blockList()) {
-                if (block.getType().equals(Material.GLASS) ||
-                        block.getType().equals(Material.STAINED_GLASS)) {
-                    continue;
-                }
-                block_list.add(block); 
+            // 如果是本插件放置的TNT 同时非玩家放置方块 略过
+            // TNT羊会破坏地图方块 这是机制
+            if (isLightTNT && !game.getRegion().isPlacedBlock(block)) {
+                continue;
             }
+            block_list.add(block);
         }
         e.blockList().clear();
         e.blockList().addAll(block_list);

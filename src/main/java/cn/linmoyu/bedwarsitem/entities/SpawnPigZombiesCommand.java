@@ -1,6 +1,7 @@
 package cn.linmoyu.bedwarsitem.entities;
 
 import cn.linmoyu.bedwarsitem.Config;
+import cn.linmoyu.bedwarsitem.utils.Utils;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.game.ResourceSpawner;
@@ -40,9 +41,10 @@ public class SpawnPigZombiesCommand implements CommandExecutor, TabCompleter {
                 int spawnCount = Config.spawner_pigzombies_count;
                 for (int i = 0; i < spawnCount; i++) {
                     spawnPigZombie(spawner.getLocation(), game);
-                    if (Config.debug) {
-                        sender.sendMessage("§e[DEBUG] 在游戏 " + gameName + " 的钻石刷新点 " + spawner.getLocation() + " 生成了一个猪人.");
-                    }
+                }
+                String debugStr = "[DEBUG] " + "在游戏 " + gameName + " 的钻石刷新点 " + spawner.getLocation() + " 生成了 " + spawnCount + "个 猪人.";
+                if (Utils.debug(debugStr)) {
+                    sender.sendMessage(debugStr);
                 }
             }
         }
@@ -75,9 +77,7 @@ public class SpawnPigZombiesCommand implements CommandExecutor, TabCompleter {
 
     private List<String> getSuggest(CommandSender sender, String[] args) {
         List<String> games = new ArrayList<>();
-        BedwarsRel.getInstance().getGameManager().getGames().forEach(game -> {
-            games.add(game.getName());
-        });
+        BedwarsRel.getInstance().getGameManager().getGames().forEach(game -> games.add(game.getName()));
         if (args.length == 1) {
             return games;
         }

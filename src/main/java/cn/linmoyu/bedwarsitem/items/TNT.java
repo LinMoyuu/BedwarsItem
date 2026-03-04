@@ -2,11 +2,11 @@ package cn.linmoyu.bedwarsitem.items;
 
 import cn.linmoyu.bedwarsitem.BedwarsItem;
 import cn.linmoyu.bedwarsitem.Config;
+import cn.linmoyu.bedwarsitem.utils.Utils;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.game.GameState;
 import io.github.bedwarsrel.game.Team;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -68,11 +68,7 @@ public class TNT implements Listener {
         if (game.isSpectator(player) || !game.getPlayers().contains(player)) {
             return;
         }
-        String metadata = damager.getMetadata("LightTNT").get(0).asString();
-        String[] data = metadata.split("\\.");
-        if (data.length > 2) return;
-        String placedPlayerName = data[1];
-        Player placedPlayer = Bukkit.getPlayer(placedPlayerName);
+        Player placedPlayer = Utils.getPlacedPlayer(damager, "LightTNT");
         if (placedPlayer != null) {
             Team playerTeam = game.getPlayerTeam(player);
             Team placedPlayerTeam = game.getPlayerTeam(placedPlayer);
@@ -81,13 +77,10 @@ public class TNT implements Listener {
                 return;
             }
         }
-        TNTPrimed tnt = (TNTPrimed) damager;
-        double distance = player.getLocation().distance(tnt.getLocation());
+        double distance = player.getLocation().distance(damager.getLocation());
 
-        if (Config.debug) {
-            BedwarsItem.getInstance().getLogger().info(player.getName() + " 距离TNT: " + distance);
-            BedwarsItem.getInstance().getLogger().info("秒杀启用: " + Config.tnt_killable_enabled + " 设定距离: " + Config.tnt_killable_distance);
-        }
+        Utils.debug(player.getName() + " 距离TNT: " + distance);
+        Utils.debug("秒杀启用: " + Config.tnt_killable_enabled + " 设定距离: " + Config.tnt_killable_distance);
         if (Config.tnt_killable_enabled && distance <= Config.tnt_killable_distance) {
             player.setHealth(0);
         } else {
