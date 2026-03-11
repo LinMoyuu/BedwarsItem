@@ -16,6 +16,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 
 public class TNT implements Listener {
@@ -61,13 +62,18 @@ public class TNT implements Listener {
             return;
         }
         Player player = (Player) entity;
+        if (player.isDead()) {
+            return;
+        }
         Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(player);
         if (game == null || game.getState() != GameState.RUNNING || game.isOverSet()) {
             return;
         }
+
         if (game.isSpectator(player) || !game.getPlayers().contains(player)) {
             return;
         }
+
         Player placedPlayer = Utils.getPlacedPlayer(damager, "LightTNT");
         if (placedPlayer != null) {
             Team playerTeam = game.getPlayerTeam(player);
@@ -75,16 +81,21 @@ public class TNT implements Listener {
             if (placedPlayerTeam != null && playerTeam == placedPlayerTeam) {
                 e.setCancelled(true);
                 return;
+            } else {
+                game.setPlayerDamager(player, placedPlayer);
             }
         }
-        double distance = player.getLocation().distance(damager.getLocation());
 
+        double distance = player.getLocation().distance(damager.getLocation());
         Utils.debug(player.getName() + " 距离TNT: " + distance);
         Utils.debug("秒杀启用: " + Config.tnt_killable_enabled + " 设定距离: " + Config.tnt_killable_distance);
+
         if (Config.tnt_killable_enabled && distance <= Config.tnt_killable_distance) {
+            e.setCancelled(true);
             player.setHealth(0);
         } else {
             e.setDamage(Config.tnt_damage);
         }
     }
+
 }

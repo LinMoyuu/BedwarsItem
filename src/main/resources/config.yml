@@ -14,9 +14,9 @@ explosion_proof:
 
 fireball:
   enabled: true
-  yield: 0.5
+  yield: 1.5
   velocity: 7.0
-  damage: 4.0
+  damage: 6.0
 
 tnt:
   enabled: true
