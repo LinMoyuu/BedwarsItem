@@ -2,6 +2,7 @@ package cn.linmoyu.bedwarsitem.items;
 
 import cn.linmoyu.bedwarsitem.BedwarsItem;
 import cn.linmoyu.bedwarsitem.Config;
+import cn.linmoyu.bedwarsitem.utils.TakeItemUtil;
 import cn.linmoyu.bedwarsitem.utils.Utils;
 import io.github.bedwarsrel.BedwarsRel;
 import io.github.bedwarsrel.game.Game;
@@ -13,10 +14,11 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 
 public class TNT implements Listener {
@@ -25,7 +27,8 @@ public class TNT implements Listener {
     public void onBlockPlace(BlockPlaceEvent e) {
         if (!Config.tnt_enable) return;
         Player player = e.getPlayer();
-        if (e.getBlock().getType() != Material.TNT) {
+        ItemStack handItem = e.getItemInHand();
+        if (handItem == null || handItem.getType() != Material.TNT) {
             return;
         }
         Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(player);
@@ -35,9 +38,10 @@ public class TNT implements Listener {
         if (game.isSpectator(player)) {
             return;
         }
-
-        e.getBlock().setType(Material.AIR);
 //        TNTPrimed tnt = e.getBlock().getLocation().getWorld().spawn(e.getBlock().getLocation().add(0.5, 0, 0.5), TNTPrimed.class);
+        e.setBuild(true);
+        e.setCancelled(false);
+        e.getBlock().setType(Material.AIR);
         TNTPrimed tnt;
         if (Config.tnt_offsetfix) {
             tnt = (TNTPrimed) player.getWorld().spawnEntity(e.getBlock().getLocation().add(0.5, 0, 0.5), EntityType.PRIMED_TNT);
@@ -49,6 +53,7 @@ public class TNT implements Listener {
         tnt.setIsIncendiary(false);
         tnt.setFuseTicks(Config.tnt_fuse_ticks);
         tnt.setMetadata("LightTNT", new FixedMetadataValue(BedwarsItem.getInstance(), game.getName() + "." + player.getName()));
+        TakeItemUtil.TakeItem(player, handItem);
     }
 
     @EventHandler
