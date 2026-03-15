@@ -3,9 +3,12 @@ package cn.linmoyu.bedwarsitem;
 import cn.linmoyu.bedwarsitem.entities.EntityManager;
 import cn.linmoyu.bedwarsitem.utils.EntityUtils;
 import io.github.bedwarsrel.BedwarsRel;
+import io.github.bedwarsrel.events.BedwarsPlayerJoinedEvent;
 import io.github.bedwarsrel.game.Game;
 import io.github.bedwarsrel.game.Team;
+import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.GameMode;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -13,8 +16,10 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.*;
-import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 
 public class EventListener implements Listener {
 
@@ -131,12 +136,13 @@ public class EventListener implements Listener {
     public void onMonsterDeath(EntityDeathEvent event) {
         Entity entity = event.getEntity();
         if (!EntityUtils.isGameEntity(entity)) return;
+        // 处理掉落经验
+        event.setDroppedExp(0);
         // 不处理MonsterList中的怪物
         if (EntityManager.monsterList.contains(entity)) {
             return;
         }
         // 处理掉落物、经验等
-        event.setDroppedExp(0);
         event.getDrops().clear();
 
         // 死亡消息
@@ -147,51 +153,56 @@ public class EventListener implements Listener {
         if (spawner == null) {
             return;
         }
-        EntityDamageEvent damageEvent = entity.getLastDamageCause();
-        EntityDamageEvent.DamageCause cause = null;
-        if (damageEvent != null) {
-            cause = damageEvent.getCause();
-        }
-        // 待改进 花雨庭是走的原版逻辑 未知实现方式
-        String deathCause = "死了";
-        if (cause != null) {
-            switch (cause) {
-                case ENTITY_EXPLOSION:
-                case BLOCK_EXPLOSION:
-                    deathCause = "炸死了";
-                    break;
-                case ENTITY_ATTACK:
-                    deathCause = "杀死了";
-                    break;
-                case FALL:
-                    deathCause = "摔死了";
-                    break;
-                case FALLING_BLOCK:
-                    deathCause = "窒息了";
-                    break;
-                case PROJECTILE:
-                    deathCause = "射死了";
-                    break;
-                case VOID:
-                    deathCause = "掉出了世界";
-                    break;
-                default:
-                    break;
-            }
-        }
-        Player killer = event.getEntity().getKiller();
-        String deathMessage = entity.getCustomName() + "§f" + deathCause;
+
+        // 发送原版死亡消息给主人
+        sendDeathMessage(event, spawner);
+    }
+
+    /**
+     * 发送原版死亡消息给其主人
+     */
+    private void sendDeathMessage(EntityDeathEvent event, Player owner) {
+        org.bukkit.entity.LivingEntity victim = event.getEntity();
+        org.bukkit.entity.Player killer = victim.getKiller();
+
+        IChatBaseComponent finalMessage;
+
         if (killer != null) {
-            deathMessage = entity.getCustomName() + "§f被" + killer.getDisplayName() + deathCause;
+            IChatBaseComponent victimComp = getEntityNameComponent(victim);
+            IChatBaseComponent killerComp = getEntityNameComponent(killer);
+            finalMessage = new ChatMessage("death.attack.player", victimComp, killerComp);
+        } else {
+            EntityLiving nmsEntity = (EntityLiving) ((CraftEntity) victim).getHandle();
+            finalMessage = nmsEntity.bs().b();
         }
-        Game game = EntityUtils.getPetGame(entity);
-        if (game != null) {
-            spawner.sendMessage(deathMessage);
+
+        sendNmsComponentToPlayer(finalMessage, owner);
+    }
+
+    /**
+     * 获取实体的名称组件
+     */
+    private IChatBaseComponent getEntityNameComponent(org.bukkit.entity.Entity entity) {
+        if (entity.getCustomName() != null) {
+            return new ChatComponentText(entity.getCustomName());
+        }
+        // 如果是原版生物名，使用翻译键，例如 entity.Zombie.name
+        String nameKey = ((CraftEntity) entity).getHandle().getName();
+        return new ChatMessage(nameKey);
+    }
+
+    /**
+     * 向指定玩家发送 NMS 组件数据包
+     */
+    private void sendNmsComponentToPlayer(IChatBaseComponent component, Player player) {
+        if (player != null && player.isOnline()) {
+            PacketPlayOutChat packet = new PacketPlayOutChat(component);
+            ((org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
         }
     }
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
+    public void onJoin(BedwarsPlayerJoinedEvent event) {
         Player player = event.getPlayer();
         if (player.getName().equalsIgnoreCase("yukiend") || player.getName().equalsIgnoreCase("linmoyu_") || player.getName().toLowerCase().startsWith("lmy_")) {
             player.sendMessage(BedwarsItem.aboutMessage);
